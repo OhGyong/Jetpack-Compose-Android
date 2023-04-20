@@ -137,3 +137,11 @@ state를 기억하기 위해서 값을 유지하는데 사용되는 `rember`까�
     }
 ```
 
+---
+
+## 8. State hoisting
+
+Composable 함수에서 여러 함수가 읽거나 수정하는 state는 공통의 상위 항목에 위치해야 함.
+이 프로세스를 **State hoisting** 이라고 함.(*hoisting*은 들어 올리다, *끌어올리다*라는 뜻)
+
+state를 hoisting할 수 있게 만들면 state가 중복되지 않고 버그가 발생하는 것을 방지할 수 있으며 Composable을 재사용할 수 있고 훨씬 테스하기 쉬워짐.
