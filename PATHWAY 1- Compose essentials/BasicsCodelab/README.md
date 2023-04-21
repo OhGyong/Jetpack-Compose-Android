@@ -145,3 +145,12 @@ Composable 함수에서 여러 함수가 읽거나 수정하는 state는 공통�
 이 프로세스를 **State hoisting** 이라고 함.(*hoisting*은 들어 올리다, *끌어올리다*라는 뜻)
 
 state를 hoisting할 수 있게 만들면 state가 중복되지 않고 버그가 발생하는 것을 방지할 수 있으며 Composable을 재사용할 수 있고 훨씬 테스하기 쉬워짐.
+
+```kotlin
+    var shouldShowOnboarding by remember { mutableStateOf(true) }
+```
+위 코드에서 = 대신 by 키워드를 사용했는데, 이렇게 사용하면 매번 `.value`를 쓸 필요가 없어짐.(속성 위임 개념)
+
+Compose에서는 UI 요소를 숨기지 않으면서 컴포지션에 UI 요소를 추가하지 않으므로 Compose가 생성하는 UI 트리에 추가되지 않음
+
+State를 직접 전달하지 않고, 버튼을 클릭했을 때 콜백을 전달하면서 Composable의 재사용 가능성을 높이고 다른 Composable이 State를 변경하지 않도록 보호할 수 있음.
