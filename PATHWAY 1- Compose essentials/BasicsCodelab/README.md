@@ -154,3 +154,25 @@ state를 hoisting할 수 있게 만들면 state가 중복되지 않고 버그가
 Compose에서는 UI 요소를 숨기지 않으면서 컴포지션에 UI 요소를 추가하지 않으므로 Compose가 생성하는 UI 트리에 추가되지 않음
 
 State를 직접 전달하지 않고, 버튼을 클릭했을 때 콜백을 전달하면서 Composable의 재사용 가능성을 높이고 다른 Composable이 State를 변경하지 않도록 보호할 수 있음.
+
+---
+
+## 9.Creating a performant lazy list
+
+스크롤이 가능한 열을 표시하기 위해서 `LazyColumn`을 사용함.
+LazyColumn(LazyRow)과 는 RecyclerView와 동일하지만 하위 요소를 재활용하지 않음.
+그리고 스크롤을 할 때 새로운 Composable을 방출하는데, Composable을 방출하는 것은 Android Views를 인스턴스화하는 것보다 비용이 적게 들기 때문에 계속 성능이 유지됨.
+
+```kotlin
+    @Composable
+    private fun Greetings(
+        modifier: Modifier = Modifier,
+        names: List<String> = List(1000) { "$it" }
+    ) {
+        LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
+            items(items = names) { name ->
+                Greeting(name = name)
+            }
+        }
+    }
+```
