@@ -180,6 +180,33 @@ LazyColumn(LazyRow)과 는 RecyclerView와 동일하지만 하위 요소를 재�
 ---
 
 ## 10. 상태 유지(Persisting state)
+
 위에서 `remember`를 사용해서 state를 유지한다고 했는데 화면이 재구성 될 때(화면 회전 등) Composable도 다시 시작되면서 모든 state가 손실됨.
 이럴 때 remember를 사용하는 대신 `rememberSaveable`를 사용하면 됨. rembmerSaveable은 state를 보존하여 앱이 재실행되거나 프로세스가 중단되어도 마지막으로 저장된 값을 사용할 수 있음.
 
+---
+
+## 11. 요소에 애니메이션 적용(Animating your list)
+Compose에서는 여러 가지 방법으로 UI에 애니메이션을 지정할 수 있음. 
+`animateDpAsState` Composable 함수를 사용하면 애니메이션이 완료될 때까지 애니메이션에 의해 객체의 value가 계속 업데이트되는 state 객체를 반환함.
+
+```kotlin
+    val extraPadding by animateDpAsState(
+        if (expanded) 48.dp else 0.dp
+    )
+```
+
+참고로 padding 값이 음수가 되면 앱이 비정상 종료가 될 수 있으니 조심해야 함.
+
+`animate*AsState`를 사용하여 만든 애니메이션은 중단될 수 있음. 중간에 목표 값이 변경되면 애니메이션을 다시 시작하고 새 값을 가리킴.
+
+`spring` 기반의 애니메이션을 `animationSpec` 매개변수로 사용할 수 있음. spring은 시간과 관련된 매개변수를 사용하지 않음
+```kotlin
+    val extraPadding by animateDpAsState(
+        if (expanded) 48.dp else 0.dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
+```
