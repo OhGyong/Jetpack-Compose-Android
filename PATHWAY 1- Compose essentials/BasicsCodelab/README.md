@@ -128,7 +128,7 @@ Compose 앱은 Composable 함수를 호출하여 데이터를 UI로 변환함.
 
 리컴포지션을 하기 위해서는 값을 탐지하고 있어야 함.
 `mutableStateOf` 함수를 사용해서 state 정보를 저장하는데 mutableStateOf를 할당하기만 해서는 state가 유지되지 않음.
-state를 기억하기 위해서 값을 유지하는데 사용되는 `rember`까지 사용해야 함.
+`remember`를 사용해서 state를 유지할 수 있음.
 ```kotlin
     @Composable
     fun Greeting() {
@@ -176,3 +176,10 @@ LazyColumn(LazyRow)과 는 RecyclerView와 동일하지만 하위 요소를 재�
         }
     }
 ```
+
+---
+
+## 10. 상태 유지(Persisting state)
+위에서 `remember`를 사용해서 state를 유지한다고 했는데 화면이 재구성 될 때(화면 회전 등) Composable도 다시 시작되면서 모든 state가 손실됨.
+이럴 때 remember를 사용하는 대신 `rememberSaveable`를 사용하면 됨. rembmerSaveable은 state를 보존하여 앱이 재실행되거나 프로세스가 중단되어도 마지막으로 저장된 값을 사용할 수 있음.
+
