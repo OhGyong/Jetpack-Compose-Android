@@ -265,3 +265,28 @@ MaterialTheme의 세 가지 속성 `colorScheme`, `typography`, `shapes`를 사�
 <br>
 
 `ui/theme` 폴더에서 Color.kt 파일이 존재하고, 이곳에 새로운 색상을 정의해서 사용.
+
+---
+
+## 13. 설정 완료(Finishing touches!)
+
+```kotlin
+implementation "androidx.compose.material:material-icons-extended:$compose_version"
+```
+를 등록하면 `materail-icons-extended`를 사용할 수 있음(아이콘 사용 가능).
+
+```kotlin
+    IconButton(onClick = { expanded = !expanded }) { 
+        Icon(
+            imageVector = if(expanded) Filled.ExpandLess else Filled.ExpandMore,
+            contentDescription = if(expanded){
+           stringResource(id = R.string.show_less)
+        } else {
+            stringResource(id = R.string.show_more)
+        })
+    }
+```
+
+<br>
+
+string.xml에 등록한 문자열은 `stringResource(R.stirng.~)`을 사용해서 얻을 수 있음.
