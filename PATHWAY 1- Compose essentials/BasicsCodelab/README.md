@@ -290,3 +290,7 @@ implementation "androidx.compose.material:material-icons-extended:$compose_versi
 <br>
 
 string.xml에 등록한 문자열은 `stringResource(R.stirng.~)`을 사용해서 얻을 수 있음.
+
+---
+
+![basics codelab](https://user-images.githubusercontent.com/52282493/233921079-f6d323a0-c367-49dd-b5a8-7cbede178c1b.gif)

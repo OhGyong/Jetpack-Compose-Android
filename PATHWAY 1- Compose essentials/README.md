@@ -76,3 +76,14 @@ Composable 함수는 XML이 아닌 코틀린으로 작성되기 때문에 다른
 명령형 UI 모델에서 위젯을 변경하려면 위젯에서 setter를 호출하여 내부 상태를 변경한다.
 Compose에서는 새 데이터를 사용하여 구성 가능한 함수를 다시 호출한다.
 이렇게 하면 함수가 재구성되며, 위젯이 새로운 데이터로 다시 그려진다.
+
+---
+
+## 4. Write your first Compose app
+![basics codelab](https://user-images.githubusercontent.com/52282493/233921079-f6d323a0-c367-49dd-b5a8-7cbede178c1b.gif)
+- Compose 정의
+- Compose로 UI 빌드하기
+- Composable 함수의 status 관리
+- RecyclerView 같은 리스트 뷰 만들기
+- 애니메이션 추가하기
+- 앱 스타일과 테마 지정하기
