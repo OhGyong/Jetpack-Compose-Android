@@ -16,9 +16,10 @@ Compose 앱은 Composable 함수로 구성된다. Composable 함수는 `@Composa
 대개 Composable 함수를 줄여서 Composable이라고 함.
 ~~~
 
----
 재사용이 가능한 Composable을 만들면 앱에 사용하는 UI 요소의 라이브러리를 쉽게 빌드할 수 있다.
 또한 각 요소는 화면의 한 부분을 담당하며 독립적으로 수정할 수 있다.
+
+---
 
 setContent 내에서 사용되는 앱 테마는 프로젝트 이름에 맞게 지정됨.
 Theme.kt를 찾아보면 프로젝트 이름과 일치하는 테마가 설정되어 있음.<br>
