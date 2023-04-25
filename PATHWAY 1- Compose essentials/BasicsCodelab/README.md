@@ -1,5 +1,25 @@
 [Jetpack Compose basics Codelab](https://developer.android.com/codelabs/jetpack-compose-basics?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fjetpack-compose-for-android-developers-1%3Fhl%3Dko%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fjetpack-compose-basics#0)
 
+## 1. Codelab을 시작하기 전에 Compose를 알아보자(Before you begin)
+
+`Jetpack Compose`는 UI 개발을 간소화하기 위해 설계된 최신 개발 도구로, 
+반응형 프로그래밍 모델을 코틀린 프로그래밍 언어의 간결성과 사용 편의성을 갖도록 결합했다.
+이것은 완전히 선언적인 접근 방식으로, 데이터를 UI 계층 구조로 변환하는 일련의 함수를 호출하여 UI를 설명한다.
+기본 데이터가 변경되면 프레임워크가 이런 함수를 자동으로 다시 실행하여 UI 계층 구조를 업데이트 한다.
+
+Compose 앱은 Composable 함수로 구성된다. Composable 함수는 `@Composable` 이라는 주석이 달린 일반 함수이며
+다른 Composable 함수를 호출할 수 있다. 새로운 UI 구성요소를 만들기 위해서는 Composable 함수만 있으면 된다.
+이때 주석인 `@`은 지속적으로 UI를 업데이트하고 유지관리하기 위해 함수에 특수 지원을 추가하도록 Compose에 알려주는
+역할을 한다.
+
+~~~ 
+대개 Composable 함수를 줄여서 Composable이라고 함.
+~~~
+
+---
+재사용이 가능한 Composable을 만들면 앱에 사용하는 UI 요소의 라이브러리를 쉽게 빌드할 수 있다.
+또한 각 요소는 화면의 한 부분을 담당하며 독립적으로 수정할 수 있다.
+
 setContent 내에서 사용되는 앱 테마는 프로젝트 이름에 맞게 지정됨.
 Theme.kt를 찾아보면 프로젝트 이름과 일치하는 테마가 설정되어 있음.<br>
 ```kotlin
