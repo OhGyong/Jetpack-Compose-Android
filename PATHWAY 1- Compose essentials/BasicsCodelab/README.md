@@ -158,16 +158,18 @@ Button은 material3 패키지에서 제공하는 Composable 이다.
 
 ## 7. Compose의 상태(State in Compose)
 
-Compose에서 값을 `state`라고 함.<br>
+Compose 앱은 Composable 함수를 호출하여 데이터를 UI로 변환한다.
+데이터가 변경되면 Compose는 Composable 함수를 다시 실행하여 새로운 데이터로 업데이트된 UI를 만든다.
+이것을 **리컴포지션(recomposition)** 이라고 하는데, 
+Compose는 데이터가 변경된 Compose 요소만 다시 구성하고
+영향을 받지 않는 요소는 다시 구성하지 않고 건너뛰도록 개별 Composable에서 필요한 데이터를 확인한다.
+즉, 리컴포지션을 하기 위해서는 값을 탐지하고 있어야 한다.
 
-Compose 앱은 Composable 함수를 호출하여 데이터를 UI로 변환함.
-데이터가 변경되면 Compose는 새 데이터로 이러한 함수를 다시 실행하여 업데이트된 UI를 만듬.
-이것을 **리컴포지션(recomposition)** 이라고 함.
-또한, Compose는 데이터가 변경된 구성요소만 다시 구성하고 영향을 받지 않는 구성요소는 다시 구성하지 않고 건너뛰도록 개별 Composable에서 필요한 데이터를 확인함.
+Compose에서 변화하는 값을 기억하기 위해서 `state`를 사용해야 한다.
+그래서 `mutableStateOf` 함수를 사용해서 state 정보를 탐지하는데,
+mutableStateOf를 할당하기만 해서는 state가 유지되지 않는다.
 
-리컴포지션을 하기 위해서는 값을 탐지하고 있어야 함.
-`mutableStateOf` 함수를 사용해서 state 정보를 저장하는데 mutableStateOf를 할당하기만 해서는 state가 유지되지 않음.
-`remember`를 사용해서 state를 유지할 수 있음.
+리컴포지션 간에 state를 유지하기 위해서 `remember`까지 사용해야 한다.
 ```kotlin
     @Composable
     fun Greeting() {
