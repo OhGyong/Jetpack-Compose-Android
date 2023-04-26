@@ -1,28 +1,28 @@
 [Jetpack Compose basics Codelab](https://developer.android.com/codelabs/jetpack-compose-basics?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fjetpack-compose-for-android-developers-1%3Fhl%3Dko%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fjetpack-compose-basics#0)
 
-## 1. Codelab을 시작하기 전에 Compose를 알아보자(Before you begin)
+## 1~2. Codelab을 시작하기 전에 Compose를 알아보자(Before you begin)
 
 `Jetpack Compose`는 UI 개발을 간소화하기 위해 설계된 최신 개발 도구로, 
 반응형 프로그래밍 모델을 코틀린 프로그래밍 언어의 간결성과 사용 편의성을 갖도록 결합했다.
 이것은 완전히 선언적인 접근 방식으로, 데이터를 UI 계층 구조로 변환하는 일련의 함수를 호출하여 UI를 설명한다.
-기본 데이터가 변경되면 프레임워크가 이런 함수를 자동으로 다시 실행하여 UI 계층 구조를 업데이트 한다.
+기본 데이터가 변경되면 프레임워크가 이런 함수를 자동으로 다시 실행하여 UI 계층 구조를 업데이트한다.
 
 Compose 앱은 Composable 함수로 구성된다. Composable 함수는 `@Composable` 이라는 주석이 달린 일반 함수이며
 다른 Composable 함수를 호출할 수 있다. 새로운 UI 구성요소를 만들기 위해서는 Composable 함수만 있으면 된다.
 이때 주석인 `@`은 지속적으로 UI를 업데이트하고 유지관리하기 위해 함수에 특수 지원을 추가하도록 Compose에 알려주는
 역할을 한다.
+> 대개 Composable 함수를 줄여서 Composable이라고 함.
 
-~~~ 
-대개 Composable 함수를 줄여서 Composable이라고 함.
-~~~
 
 재사용이 가능한 Composable을 만들면 앱에 사용하는 UI 요소의 라이브러리를 쉽게 빌드할 수 있다.
 또한 각 요소는 화면의 한 부분을 담당하며 독립적으로 수정할 수 있다.
 
----
+<br>
 
-setContent 내에서 사용되는 앱 테마는 프로젝트 이름에 맞게 지정됨.
-Theme.kt를 찾아보면 프로젝트 이름과 일치하는 테마가 설정되어 있음.<br>
+새 Compose 프로젝트를 시작하려면 **Empty Compose Activity(Material3)** 을 선택하면 Compose 관련 설정을 해준다.
+
+setContent 내에서 사용되는 앱 테마는 프로젝트 이름에 맞게 지정된다.
+Theme.kt를 찾아보면 프로젝트 이름과 일치하는 테마가 설정되어 있는 것을 확인할 수 있다.
 ```kotlin
     setContent {
         // setContent 내에서 사용되는 앱 테마는 프로젝트 이름에 맞게 지정됨.
@@ -41,53 +41,68 @@ Theme.kt를 찾아보면 프로젝트 이름과 일치하는 테마가 설정되
 
 ## 3. Compose 시작하기(Getting started with Compose)
 
-Composable 함수는 `@Composable` 주석이 달린 일반 함수.<br>
-이 주석을 달면 함수가 내부에서 다른 Composable 함수를 호출할 수 있음.<br>
+Composable 함수는 `@Composable` 주석이 달린 일반 함수이다.
+이 주석을 달면 함수가 내부에서 다른 Composable 함수를 호출할 수 있다.
 
-Compose를 사용하면 Activity가 Android 앱의 진입점으로 유지됨.<br/>
-`setContent`를 사용하여 레이아웃을 정의하는데, 기존 명령형 UI에서 XML 파일을 사용하는 것 대신에
-Composable 함수를 호출함.
+Compose를 사용하면 Activity가 Android 앱의 진입점으로 유지된다.
+`setContent`를 사용하여 레이아웃을 정의하는데, 기존 명령형 UI에서 XML 파일을 사용하는 것 대신에 Composable 함수를 호출한다.
+```kotlin
+    setContent {
+        BasicsCodelabTheme {
+        // A surface container using the 'background' color from the theme
+            Surface(
+              modifier = Modifier.fillMaxSize(),
+              color = MaterialTheme.colorScheme.background
+            ) {
+                Greeting("Android")
+            }
+        }
+    }
+```
 
-안드로이드 스튜디오 미리보기를 사용하려면 매개변수가 없는 Composable 함수 또는 기본 매개변수를 포함하는 함수를
-`@Preview` 주석으로 표시하고 프로젝트를 빌드하면 됨. 참고로 동일한 파일에 미리보기를 여러개 만들고 이름을 지정할 수 있다.
+안드로이드 스튜디오에서 구현한 코드의 미리보기를 확인하고 싶다면 매개변수가 없는 Composable 함수 또는 기본 매개변수를 포함하는 함수를
+`@Preview` 주석으로 표시하고 프로젝트를 빌드하면 된다.
+> 참고로 동일한 파일에 미리보기를 여러 개 만들고 이름을 지정할 수 있다.
 
 ---
 
 ## 4. UI 조정(Tweaking the UI)
 
-레이아웃의 배경 색상을 변경하려면 Composable 함수를 `Surface`로 래핑해야 함.<br>
+레이아웃의 배경 색상을 변경하려면 Composable 함수를 `Surface`로 래핑해야 한다.
 ```kotlin
     Surface(color = MaterialTheme.colorScheme.primary) {
         Text (text = "Hello $name!")
     }
 ```
 Surface와 MaterialTheme는 [Material Design](https://m3.material.io/)과 관련된 개념으로 Material Design은
-사용자 인터페이스와 환경을 만드는 데 도움을 주기 위해 구글에서 만든 디자인 시스템임.<br>
-> 참고로 material을 import할 때 버전 확인 잘하자. 예제에서는 material3으로 했음
+사용자 인터페이스와 기기 환경을 만드는(꾸미는) 데 도움을 주기 위해 구글에서 만든 디자인 시스템이다.
+> 참고로 material을 import 할 때 버전을 확인하자. (예제에서는 material3으로 했음)
 
-color를 MaterialTheme를 사용해서 변경했는데 배경뿐과 텍스트가 같이 변경된 것을 볼 수 있는데
-Material 구성요소는 앱에 넣고자 하는 공통 기능을 처리하기 때문.
+
+위 코드에서 Text는 Surface에 적용된 컬러로 표시된다.
+이때 배경뿐만 아니라 텍스트가 같이 변경된 것을 볼 수 있는데, Material은 앱에 공통으로 적용되는 기본값과 패턴을 제공하기 때문이다.
 
 <br>
 
-Surface와 Text 같은 Compose UI 요소는 `modifier` 매개변수를 선택적으로 허용함.
-modifier는 상위 요소 레이아웃 내에서 UI 요소가 배치되고 표시되고 동작하는 방식을 UI 요소에 알림.<br>
+Surface와 Text 같은 Compose UI 요소는 `modifier` 매개변수를 선택적으로 허용한다.
+modifier는 상위 요소 레이아웃 내에서 UI 요소가 배치되고 표시되고 동작하는 방식을 UI 요소에 알려준다.
 ```kotlin
     Surface(color = MaterialTheme.colorScheme.primary) {
         Text(text = "Hello $name!", modifier = Modifier.padding(24.dp))
     }
 ```
-modifier에는 정렬, 애니메이션 처리, 배치, 클릭 가능 여부, 스크롤 가능 여부, 변환 등 사용할 수있는 수십 가지의 정보를 갖고 있음.
+modifier에는 정렬, 애니메이션 처리, 배치, 클릭 가능 여부, 스크롤 가능 여부, 변환 등 사용할 수 있는 수십 가지의 정보를 갖고 있다.
 
 ---
 
 ## 5. Composable 재사용(Reusing composables)
 
-UI에 추가하는 구성요소가 많을수록 생성되는 중첩 레벨이 많이지기 때문에 가독성에 영향을 줄 수 있음.
-이런 이유로 재사용할 수 있는 구성요소를 만들면 앱에서 사용하는 UI 요소의 라이브러리를 쉽게 만들 수 있음.
+UI에 추가되는 Compose 요소가 많을수록 생성되는 중첩 레벨이 많이지기 때문에 가독성에 영향을 줄 수 있다.
+이런 이유로 재사용할 수 있는 Compose 요소를 만들면 앱에서 사용하는 UI 요소의 라이브러리를 쉽게 만들 수 있고,
+독립적으로 수정이 가능하다.
 
-함수는 기본적으로 modifier를 사용하지 않아도 empty modifier를 매개변수로 포함하는 것이 좋음.
-함수 내에서 호출하는 첫 번째 Composable로 modifier를 전달하면 함수 외부에서 레이아웃 안내와 동작을 조정할 수 있게됨.
+함수는 기본적으로 modifier를 사용하지 않아도 empty modifier를 매개변수로 포함하는 것이 좋다.
+함수 내에서 호출하는 첫 번째 Composable로 modifier를 전달하면 함수 외부에서 레이아웃 안내와 동작을 조정할 수 있게 된다.
 ```kotlin
     @Composable
     private fun MyApp(modifier: Modifier = Modifier) {
@@ -104,16 +119,16 @@ UI에 추가하는 구성요소가 많을수록 생성되는 중첩 레벨이 �
 
 ## 6. 열과 행 만들기(Creating columns and rows)
 
-Compose의 세 가지 기본 표준 레이아웃 요소는 `Column`, `Row`, `Box` 임.
+Compose의 세 가지 기본 표준 레이아웃 요소는 `Column`, `Row`, `Box` 이다.
 
-Column은 내부의 각 하위 요소를 세로로 배치함.<br>
-Row는 내부의 각 하위 요소를 가로로 배치함.<br>
-(box는 설명 없음)
+Column은 내부의 각 하위 요소를 세로로 배치하는 레이아웃이고,<br>
+Row는 내부의 각 하위 요소를 가로로 배치하는 레이아웃이다.<br>
+> (box는 이번 Codelab에서 안 다루는 듯.)
 
 <br>
 
-Composable 함수는 코틀린의 다른 함수처럼 `for`문과 같은 구문을 추가할 수 있음.
-for문에 UI 요소를 작성하여 UI를 제작할 수 있음.
+Composable 함수는 코틀린의 다른 함수처럼 `for`문과 같은 구문을 추가할 수 있다.
+예를 들어 for문에 UI 요소를 작성하여 연속적으로 UI를 그릴 수 있다.
 ```kotlin
 @Composable
     fun MyApp(
@@ -130,11 +145,14 @@ for문에 UI 요소를 작성하여 UI를 제작할 수 있음.
 
 <br>
 
-Button은 material3 패키지에서 제공하는 Composable 임.
-후행 람다는 괄호 밖으로 이동할 수 있어서 모든 콘텐츠를 버튼의 하위 요소로 추가 가능.
+Button은 material3 패키지에서 제공하는 Composable 이다.
+버튼 블록에 UI 요소를 작성하여 버튼을 꾸미고, 후행 람다를 사용하여 이벤트 처리를 할 수 있다.
 
-`weight` 수정자는 요소를 유연하게 만들기 이해 가중치가 없는 다른 요소를 효과적으로 밀어내어 요소의 사용 가능한 모든 공간을 챙움.
-이 modifier는 `fillMaxWidth`와 중복되기도 함.
+> Material에서 제공하는 버튼의 종류로 Button, ElevateButton, FilledTonalButton 등 여러 개가 있으니
+  콘텐츠의 방향성에 맞춰 선택하자.
+
+`weight` modifier는 요소를 유연하게 만들기 위해 가중치가 없는 다른 요소를 효과적으로 밀어내어 요소의 사용 가능한 모든 공간을 채운다.
+> 이 modifier는 `fillMaxWidth`와 중복될 수 있다.
 
 ---
 
