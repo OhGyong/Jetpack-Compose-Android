@@ -13,6 +13,11 @@ Compose 앱은 Composable 함수로 구성된다. Composable 함수는 `@Composa
 역할을 한다.
 > 대개 Composable 함수를 줄여서 Composable이라고 함.
 
+> - `Composition`은 UI를 구성하는 기본 단위를 말함.<br>
+> - Composable 함수가 호출되면 해당 요소가 Compose UI 트리에 추가되는데,
+    Compose UI 트리를 구성하는 개별적인 UI 요소들이 서로 결합하여 하나의 UI 화면을 만드는 과정을 `Composition`이라고 부름.
+> - Compose UI 트리를 구성하는 각각의 Composable 함수들을 `Composition`으로 볼 수 있음.
+
 
 재사용이 가능한 Composable을 만들면 앱에 사용하는 UI 요소의 라이브러리를 쉽게 빌드할 수 있다.
 또한 각 요소는 화면의 한 부분을 담당하며 독립적으로 수정할 수 있다.
@@ -182,27 +187,34 @@ mutableStateOf를 할당하기만 해서는 state가 유지되지 않는다.
 
 ## 8. State hoisting
 
-Composable 함수에서 여러 함수가 읽거나 수정하는 state는 공통의 상위 항목에 위치해야 함.
-이 프로세스를 **State hoisting** 이라고 함.(*hoisting*은 들어 올리다, *끌어올리다*라는 뜻)
+Composable 함수에서 여러 함수가 읽거나 수정하는 state는 공통의 상위 항목에 위치해야 한다.
+이 프로세스를 **State hoisting** 이라고 한다.
+> *hoisting*은 들어 올리다, 끌어올리다 라는 뜻
 
-state를 hoisting할 수 있게 만들면 state가 중복되지 않고 버그가 발생하는 것을 방지할 수 있으며 Composable을 재사용할 수 있고 훨씬 테스하기 쉬워짐.
+state를 hoisting 할 수 있게 만들면 state가 중복되지 않고 버그가 발생하는 것을 방지할 수 있으며
+Composable을 재사용할 수 있고 훨씬 테스트하기 쉬워진다.
+> Composable의 상위 요소에서 제어할 필요가 없는 state는 hoisting되지 않도록 하자.
 
 ```kotlin
     var shouldShowOnboarding by remember { mutableStateOf(true) }
 ```
-위 코드에서 = 대신 by 키워드를 사용했는데, 이렇게 사용하면 매번 `.value`를 쓸 필요가 없어짐.(속성 위임 개념)
+위 코드에서 `=` 대신 `by` 키워드를 사용했는데, 이렇게 사용하면 매번 `.value`를 쓸 필요가 없다.(속성 위임 개념)
 
-Compose에서는 UI 요소를 숨기지 않으면서 컴포지션에 UI 요소를 추가하지 않으므로 Compose가 생성하는 UI 트리에 추가되지 않음
+Compose에서는 visibility 속성을 GONE으로 두는 등의 처리를 하여 UI 요소를 숨기지 않고,
+Compose 항목에 UI 요소를 추가하지 않는 것으로 UI 트리에서 제외할 수 있다.
 
-State를 직접 전달하지 않고, 버튼을 클릭했을 때 콜백을 전달하면서 Composable의 재사용 가능성을 높이고 다른 Composable이 State를 변경하지 않도록 보호할 수 있음.
+State를 다른 Composable 함수에서 사용해야 할 때 직접 전달하지 않고 콜백과 같은 이벤트로 전달하면
+Composable의 재사용 가능성을 높이고 다른 Composable이 State를 변경하지 않도록 보호할 수 있다.
 
 ---
 
 ## 9.Creating a performant lazy list
 
-스크롤이 가능한 열을 표시하기 위해서 `LazyColumn`을 사용함.
-LazyColumn(LazyRow)과 는 RecyclerView와 동일하지만 하위 요소를 재활용하지 않음.
-그리고 스크롤을 할 때 새로운 Composable을 방출하는데, Composable을 방출하는 것은 Android Views를 인스턴스화하는 것보다 비용이 적게 들기 때문에 계속 성능이 유지됨.
+스크롤이 가능한 열을 표시하기 위해서 `LazyColumn`을 사용한다. (행은 LazyRow)
+LazyColumn은 RecyclerView와 동일하지만 하위 요소를 재활용하지 않는다.
+하지만 스크롤을 할 때 새로운 Composable을 방출하는데, Composable을 방출하는 것은
+Android Views를 인스턴스화하는 것보다 비용이 적게 들기 때문에 계속 성능을 유지할 수 있다.
+> LazyColumn은 화면에 보이는 항목만 렌더링하기 때문에 리스트의 크기가 커도 성능이 떨어지지 않는다고 함.
 
 ```kotlin
     @Composable
@@ -222,26 +234,22 @@ LazyColumn(LazyRow)과 는 RecyclerView와 동일하지만 하위 요소를 재�
 
 ## 10. 상태 유지(Persisting state)
 
-위에서 `remember`를 사용해서 state를 유지한다고 했는데 화면이 재구성 될 때(화면 회전 등) Composable도 다시 시작되면서 모든 state가 손실됨.
-이럴 때 remember를 사용하는 대신 `rememberSaveable`를 사용하면 됨. rembmerSaveable은 state를 보존하여 앱이 재실행되거나 프로세스가 중단되어도 마지막으로 저장된 값을 사용할 수 있음.
+위에서 `remember`를 사용해서 state를 유지한다고 했는데 화면이 재구성 될 때는(화면 회전 등) 
+Composable도 다시 시작되면서 모든 state가 손실되는 문제가 발생한다.
+그 이유는 remember 함수는 Composable이 Composition에 유지되는 동안에만 작동하기 때문이다.
+
+이럴 때 remember 함수를 사용하는 대신 `rememberSaveable`를 사용하면 된다.
+rembmerSaveable은 state를 보존하여 앱이 재실행되거나 프로세스가 중단되어도 마지막으로 저장된 값을 사용할 수 있다.
 
 ---
 
 ## 11. 요소에 애니메이션 적용(Animating your list)
-Compose에서는 여러 가지 방법으로 UI에 애니메이션을 지정할 수 있음. 
-`animateDpAsState` Composable 함수를 사용하면 애니메이션이 완료될 때까지 애니메이션에 의해 객체의 value가 계속 업데이트되는 state 객체를 반환함.
 
-```kotlin
-    val extraPadding by animateDpAsState(
-        if (expanded) 48.dp else 0.dp
-    )
-```
+Compose에서는 여러 가지 방법으로 UI에 애니메이션을 지정할 수 있다.
+간단한 애니메이션을 위한 상위 수준의 API에서 전체 제어 및 복잡한 전환을 위한 하위 수준의 메서드까지 다양한 방법이 있다.
 
-참고로 padding 값이 음수가 되면 앱이 비정상 종료가 될 수 있으니 조심해야 함.
+<br>
 
-`animate*AsState`를 사용하여 만든 애니메이션은 중단될 수 있음. 중간에 목표 값이 변경되면 애니메이션을 다시 시작하고 새 값을 가리킴.
-
-`spring` 기반의 애니메이션을 `animationSpec` 매개변수로 사용할 수 있음. spring은 시간과 관련된 매개변수를 사용하지 않음
 ```kotlin
     val extraPadding by animateDpAsState(
         if (expanded) 48.dp else 0.dp,
@@ -251,6 +259,19 @@ Compose에서는 여러 가지 방법으로 UI에 애니메이션을 지정할 �
         )
     )
 ```
+
+> 참고로 padding 값이 음수가 되면 앱이 비정상 종료가 될 수 있으니 조심해야 함.
+
+그 중에서 `animateDpAsState` Composable은 애니메이션이 완료될 때까지
+애니메이션에 의해 객체의 value가 계속 업데이트되는 state 객체를 반환한다.
+
+animateDpAsState의 선택적 매개변수인 `animationSpec`은 애니메이션을 맞춤설정할 수 있다.
+`spring` 기반의 애니메이션을 `animationSpec` 매개변수로 사용하여 Bouncy 효과를 주는 애니메이션을 추가할 수 있다.
+> spring은 시간과 관련된 매개변수를 사용하지 않음.
+
+`animate~AsState`를 사용하여 만든 애니메이션은 중단될 수 있다.
+즉, 중간에 목표 값이 변경되면 애니메이션을 다시 시작하고 새 값을 가리킨다.
+> spring 기반의 애니메이션은 중단이 되었을 때 자연스럽게 보이는 특징이 있음.
 
 ---
 
