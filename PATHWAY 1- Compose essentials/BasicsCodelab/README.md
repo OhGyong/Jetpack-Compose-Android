@@ -277,9 +277,8 @@ animateDpAsState의 선택적 매개변수인 `animationSpec`은 애니메이션
 
 ## 12. 앱의 스타일 지정 및 테마 설정(Styling and theming your app)
 
-`MaterialTheme`은 Material 디자인 사양의 스타일 지정 원칙을 반영한 Composable 함수.
-스타일 지정 정보는 `content`의 내부에 있는 구성요소가 부모에서 자식으로 흐름.
-즉 부모 컴포넌트에서 정의한 스타일 정보는 하위 컴포넌트가 자신을 스타일링하는데 사용됨.
+`MaterialTheme`은 [Material 디자인 사양](https://m3.material.io/)의 스타일 지정 원칙을 반영한 Composable 함수이다.
+
 ```kotlin
 @Composable
     fun BasicsCodelabTheme(
@@ -298,7 +297,15 @@ animateDpAsState의 선택적 매개변수인 `animationSpec`은 애니메이션
     }
 ```
 
-MaterialTheme의 세 가지 속성 `colorScheme`, `typography`, `shapes`를 사용해서 스타일링을 할 수 있음.
+스타일 지정 정보는 `content`의 내부에 있는 구성요소가 부모에서 자식으로 흐른다.
+즉 부모 컴포넌트에서 정의한 스타일 정보는 하위 컴포넌트가 자신을 스타일링하는데 사용된다.
+
+위에서 작성한 BasicsCodelabTheme를 사용하는 Composable 함수는 그 하위 Composition에 똑같이 적용되며
+필요에 따라 수정을 할 수 있다.
+
+<br>
+
+MaterialTheme의 세 가지 속성 `colorScheme`, `typography`, `shapes`를 사용해서 스타일링을 할 수 있다.
 - **colorScheme**<br>
   Material Design의 색상 팔레트의 일부를 나타내며 사용자 지정 색상을 정의하는데 사용 됨.<br>
   Primary, Secondary, Surface, Background 등의 색상에 사용됨.
@@ -307,14 +314,14 @@ MaterialTheme의 세 가지 속성 `colorScheme`, `typography`, `shapes`를 사�
 - **shape**<br>
   Material Design의 라운드와 같은 모양을 정의함.
 
-예를 들어 Text() Composable 함수에 `MaterialTheme.typography`를 사용해서 텍스트 스타일을 변경할 수 있음.
+예를 들어 Text() Composable 함수에 `MaterialTheme.typography`를 사용해서 텍스트 스타일을 변경할 수 있다.
 ```kotlin
     Text(text = name, style = MaterialTheme.typography.headlineMedium)
 ```
 
 <br>
 
-미리보기(Preview)에서 `uiMode = UI_MODE_NIGHT_YES`를 사용하면 다크 모드 미리보기가 가능함.
+미리보기(Preview)에서 `uiMode = UI_MODE_NIGHT_YES`를 사용하면 다크 모드 미리보기가 가능하다.
 ```kotlin
     @Preview(
         showBackground = true,
@@ -326,7 +333,7 @@ MaterialTheme의 세 가지 속성 `colorScheme`, `typography`, `shapes`를 사�
 
 <br>
 
-`ui/theme` 폴더에서 Color.kt 파일이 존재하고, 이곳에 새로운 색상을 정의해서 사용.
+`ui/theme` 폴더에서 Color.kt 파일이 존재하고, 이곳에 새로운 색상을 정의해서 사용할 수 있다.
 
 ---
 
@@ -335,7 +342,7 @@ MaterialTheme의 세 가지 속성 `colorScheme`, `typography`, `shapes`를 사�
 ```kotlin
 implementation "androidx.compose.material:material-icons-extended:$compose_version"
 ```
-를 등록하면 `materail-icons-extended`를 사용할 수 있음(아이콘 사용 가능).
+를 등록하면 `materail-icons-extended`를 사용할 수 있다. (아이콘 사용 가능)
 
 ```kotlin
     IconButton(onClick = { expanded = !expanded }) { 
@@ -351,7 +358,7 @@ implementation "androidx.compose.material:material-icons-extended:$compose_versi
 
 <br>
 
-string.xml에 등록한 문자열은 `stringResource(R.stirng.~)`을 사용해서 얻을 수 있음.
+string.xml에 등록한 문자열은 `stringResource(R.stirng.~)`을 사용해서 얻을 수 있다.
 
 ---
 
