@@ -143,3 +143,50 @@ private fun PlantName(name: String) {
   dimens.xml의 파일 값을 쉽게 가져올 수 있다.
 - Modifier의 `wrapContentWidth()`는 텍스트가 가로로 화면 가운데 표시되도록 한다.
   XML 코드의 `android:gravity="center_horizontal"`와 유사하다.
+
+---
+
+## 7. ViewModel 및 LiveData
+Compose는 ViewModel 및 LiveData 통합 기능을 지원한다.
+
+### ViewModel
+ViewModel의 인스턴스를 Composable에 매개변수로 전달하여 사용하면 된다.
+
+주의할 점은 화면 수준의 Composable에서만 ViewModel을 참조하도록 하고,
+하위 요소는 ViewModel을 참조하는 것이 아닌 데이터만 전달할 수 있도록 한다.
+```kotlin
+@Composable
+fun PlantDetailDescription(plantDetailViewModel: PlantDetailViewModel) {
+    //...
+}
+```
+
+### LiveData
+Composable에서 매개변수로 ViewModel의 인스턴스에 접근했다면, LiveData 필드에 액세스하여 데이터를 가져온다.
+LiveData를 관찰하려면 `LiveData.observeAsState()`를 사용한다.
+
+observeAsState()는 LiveData 관찰을 시작하고 값을 State 객체로 표현한다. LiveData에 새로운 값이 탐지될 떄마다
+반환된 State가 업데이트되어 State.value를 사용하는 모든 부분이 재구성된다.
+
+그리고 LiveData에서 관찰된 값은 null일 수 있기 때문에 null 검사로 래핑해야 한다.
+null 검사 등 재사용성을 높이기 위해 LiveData 소비를 분할하고 여러 하위 Composable에서 접근하도록 한다.
+```kotlin
+@Composable
+fun PlantDetailDescription(plantDetailViewModel: PlantDetailViewModel) {
+    val plant by plantDetailViewModel.plant.observeAsState()
+    /**
+     * - LiveData에서 관찰한 값은 null 일 수 있기 때문에 null 검사로 래핑.
+     * - null 검사 등 재사용성을 높이기 위해 LiveData 소비를 분할하여 여러 하위 Composable에서 접근하게 함.
+     */
+    plant?.let {
+        PlantDetailContent(plant = it)
+    }
+}
+
+@Composable
+fun PlantDetailContent(plant: Plant) {
+    PlantName(name = plant.name)
+}
+```
+
+> 참고로 Compose에서는 `androidx.compose.runtime.getValue`를 제공하여 속성 위임(`by`)이 가능하다.
