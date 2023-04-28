@@ -18,6 +18,7 @@ Compose 앱은 Composable 함수로 구성된다. Composable 함수는 `@Composa
     Compose UI 트리를 구성하는 개별적인 UI 요소들이 서로 결합하여 하나의 UI 화면을 만드는 과정을 `Composition`이라고 부름.
 > - Compose UI 트리를 구성하는 각각의 Composable 함수들을 `Composition`으로 볼 수 있음.
 
+> 개발자가 작성한 Composable 함수를 `Component`라고 함.
 
 재사용이 가능한 Composable을 만들면 앱에 사용하는 UI 요소의 라이브러리를 쉽게 빌드할 수 있다.
 또한 각 요소는 화면의 한 부분을 담당하며 독립적으로 수정할 수 있다.
