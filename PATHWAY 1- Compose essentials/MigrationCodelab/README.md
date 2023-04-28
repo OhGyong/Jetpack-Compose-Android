@@ -190,3 +190,92 @@ fun PlantDetailContent(plant: Plant) {
 ```
 
 > 참고로 Compose에서는 `androidx.compose.runtime.getValue`를 제공하여 속성 위임(`by`)이 가능하다.
+
+---
+
+## 8. 나머지 XML 코드 부분 이전하기(More XML code migration)
+
+```xml
+<TextView
+    android:id="@+id/plant_watering_header"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_small"
+    android:layout_marginTop="@dimen/margin_normal"
+    android:layout_marginEnd="@dimen/margin_small"
+    android:gravity="center_horizontal"
+    android:text="@string/watering_needs_prefix"
+    android:textColor="?attr/colorAccent"
+    android:textStyle="bold"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/plant_detail_name" />
+
+<TextView
+    android:id="@+id/plant_watering"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_small"
+    android:layout_marginEnd="@dimen/margin_small"
+    android:gravity="center_horizontal"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/plant_watering_header"
+    app:wateringText="@{viewModel.plant.wateringInterval}"
+    tools:text="every 7 days" />
+```
+
+기존 XML에서 plant_detail_name 밑에 두 개의 TextView가 세로로 정렬되어 있다.
+이를 Composable로 구현하면 아래와 같다.
+```kotlin
+@Composable
+fun PlantDetailContent(plant: Plant) {
+    Surface {
+        Column(Modifier.padding(dimensionResource(id = R.dimen.margin_normal))) {
+            PlantName(name = plant.name)
+            PlantWatering(wateringInterval = plant.wateringInterval)
+        }
+    }
+}
+
+@Composable
+private fun PlantName(name: String) {
+    Text(
+        text = name,
+        style = MaterialTheme.typography.h5,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = dimensionResource(id = R.dimen.margin_small))
+            .wrapContentWidth(Alignment.CenterHorizontally)
+    )
+}
+
+@Composable
+private fun PlantWatering(wateringInterval: Int) {
+    Column(Modifier.fillMaxWidth()) {
+        val centerWithPaddingModifier = Modifier
+            .padding(horizontal = dimensionResource(id = R.dimen.margin_small))
+            .align(Alignment.CenterHorizontally)
+
+        val normalPadding = dimensionResource(id = R.dimen.margin_normal)
+
+        Text(
+            text = stringResource(id = R.string.watering_needs_prefix),
+            color = MaterialTheme.colors.primaryVariant,
+            fontWeight = FontWeight.Bold,
+            modifier = centerWithPaddingModifier.padding(top = normalPadding)
+        )
+
+        val wateringIntervalText = pluralStringResource(
+            id = R.plurals.watering_needs_suffix, count = wateringInterval, wateringInterval
+        )
+
+        Text(
+            text = wateringIntervalText,
+            modifier = centerWithPaddingModifier.padding(bottom = normalPadding)
+        )
+    }
+}
+```
+
+두 개의 TextView가 세로로 정렬되어 있기 때문에 `Column()`으로 래핑하고 공통으로 쓰이는 padding 속성들을 변수로 만들어서 사용하였다.
