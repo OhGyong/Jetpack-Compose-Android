@@ -80,10 +80,12 @@ Compose에서는 새 데이터를 사용하여 구성 가능한 함수를 다시
 ---
 
 ## 4. Write your first Compose app
-![basics codelab](https://user-images.githubusercontent.com/52282493/233921079-f6d323a0-c367-49dd-b5a8-7cbede178c1b.gif)
+[Bascis Codelab](https://github.com/OhGyong/Jetpack-Compose-Android/tree/main/PATHWAY%201-%20Compose%20essentials/BasicsCodelab)
 - Compose 정의
 - Compose로 UI 빌드하기
 - Composable 함수의 status 관리
 - RecyclerView 같은 리스트 뷰 만들기
 - 애니메이션 추가하기
 - 앱 스타일과 테마 지정하기
+
+![basics codelab](https://user-images.githubusercontent.com/52282493/233921079-f6d323a0-c367-49dd-b5a8-7cbede178c1b.gif)
