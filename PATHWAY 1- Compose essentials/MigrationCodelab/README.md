@@ -36,3 +36,110 @@ Compose를 사용하여 새로운 기능을 구현하는 것 외에도 기존 �
 
 ---
 
+## 4. Compose in Sunflower
+프로젝트에서 Compose를 사용할 수 있도록 build.gradle(app)에서 다음과 같이 설정을 해준다.
+```kotlin
+android {
+    //...
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        //...
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
+    }
+}
+
+dependencies {
+    //...
+    // Compose
+    def composeBom = platform('androidx.compose:compose-bom:2022.10.00')
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+
+    implementation "androidx.compose.runtime:runtime"
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.foundation:foundation"
+    implementation "androidx.compose.foundation:foundation-layout"
+    implementation "androidx.compose.material:material"
+    implementation "androidx.compose.runtime:runtime-livedata"
+    implementation "androidx.compose.ui:ui-tooling"
+    implementation "com.google.accompanist:accompanist-themeadapter-material:0.28.0"
+    //...
+}
+```
+
+---
+
+## 5. Compose 시작
+Compose에서 UI를 렌더링하려면 Activity 또는 Fragment가 필요하다.
+Sunflower에서는 모든 화면이 Fragment를 사용하기 때문에 `setContent` 메서드를 사용하여 Compose UI 콘텐츠를
+호스팅할 수 있는 Android View인 `ComposeView`를 사용한다.
+> 기존 XML 파일에서 Compose로 구현할 부분과 겹치는 요소들을 삭제하고, ComposeView를 추가하자.
+
+```xml
+<androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view" 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+```
+
+```kotlin
+override fun onCreateView(...): View? {
+   val binding = DataBindingUtil.inflate<FragmentPlantDetailBinding>(
+      inflater, R.layout.fragment_plant_detail, container, false
+   ).apply {
+      // ...
+      composeView.setContent {
+         MaterialTheme {
+            PlantDetailDescription() // Composable이 정의되어있는 파일
+         }
+      }
+   }
+   // ...
+}    
+```
+
+---
+
+## 6. XML의 내용을 Composable로 만들기(Creating a Composable out of XML)
+
+```xml
+<TextView
+   
+   android:id="@+id/plant_detail_name"
+   android:layout_width="0dp"
+   android:layout_height="wrap_content"
+   android:layout_marginStart="8dp"
+   android:layout_marginEnd="8dp"
+   android:gravity="center_horizontal"
+   android:text="@{viewModel.plant.name}"
+   android:textAppearance="?attr/textAppearanceHeadline5"
+   ... />             
+```
+
+```kotlin
+@Composable
+private fun PlantName(name: String) {
+    Text(
+        text = name,
+        style = MaterialTheme.typography.h5,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp)
+            .wrapContentWidth(Alignment.CenterHorizontally)
+    )
+}
+```
+
+- `MaterialTheme.typography.h5`는 XMl 코드의 `android:textAppearance="?attr/textAppearanceHeadline5`
+   와 유사하다.
+- Modifier의 `fillMaxWidth()`는 사용 가능한 최대 너비를 차지하도록 하여 XML 코드의 `android:layout_width="0dp"`를
+  대체한다.
+- Modifier의 `padding()`을 사용하여 XML 코드의 margin을 부여했다. 참고로 Compose는 dimensionRecource(id)를 통해
+  dimens.xml의 파일 값을 쉽게 가져올 수 있다.
+- Modifier의 `wrapContentWidth()`는 텍스트가 가로로 화면 가운데 표시되도록 한다.
+  XML 코드의 `android:gravity="center_horizontal"`와 유사하다.
