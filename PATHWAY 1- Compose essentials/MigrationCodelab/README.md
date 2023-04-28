@@ -2,8 +2,7 @@
 
 이 프로젝트는 [sunflower](https://github.com/android/sunflower/tree/views)를 바탕으로 Codelab에 맞춰 진행되었습니다. 
 
-## 1~2. Codelab 목표 및 설(Introduction, Migration strategy)
-
+## 1~3. Codelab 목표 및 설(Introduction, Migration strategy)
 Jetpack Compose는 처음부터 뷰 상호 운용성을 고려하여 설계되었다.
 Compose로 이전하려면 앱이 Compose로 완전히 이전될 때까지
 Compose와 View가 코드베이스에 공존하는 **증분 이전**을 사용하는 것이 좋다.
@@ -34,4 +33,6 @@ Compose를 사용하여 새로운 기능을 구현하는 것 외에도 기존 �
 <br>
 
 이 Codelab에서는 이미 구현된 식물 세부정보 화면은 Compose로 점진적으로 이전할 것이다.
+
+---
 
