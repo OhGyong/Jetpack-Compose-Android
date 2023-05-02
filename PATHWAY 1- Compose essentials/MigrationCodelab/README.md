@@ -309,3 +309,42 @@ private fun PlantDescription(description: String) {
     )
 }
 ```
+
+---
+
+## 10. ViewCompositionStrategy
+Compose는 `ComposeView`가 창에서 분리될 때마다 `Composition`을 삭제한다.
+다음 두 가지 이유로 Fragment에서 ComposeView가 사용될 때 바람직하지 못하다.
+- Composition은 Compose UI View 유형을 위한 Fragment 생명 주기에 따라 state를 저장해야 함.
+- 화면 전환이 발생할 때 기본 ComposeView가 분리된 상태가 되는데, 이런 전환 중에도 Compose UI 요소는 계속 표시됨.
+> 추가적으로 설명하자면 Fragment에서 화면 전환이 되었을 때, 기존 ComposeView는 분리되어 새로운 ComposeView가 생성된다.
+> 이 경우 이전에 그렸던 Compose UI 요소들이 모두 사라지고, 새로운 ComposeView에 새롭게 그려지게 되는 문제가 있다.
+
+이 문제를 해결하려면 Fragment의 생명 주기를 따르도록 `ViewCompositionStrategy`의 `setViewCompositionStrategy`를 호출한다.
+특히 `DisposeOnViewTreeLifecycleDestroyed`를 사용하면 Fragment의 `LifecycleOwner`가 소멸될 때 `Composition`을 삭제한다.
+> onStop 또는 onDestroy와 같은 생명 주기 이벤트가 발생했을 때View의 Compose 구성 요소가 폐기되도록 함.
+ 
+ ```kotlin
+override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+): View {
+    val binding = DataBindingUtil.inflate<FragmentPlantDetailBinding>(
+        inflater,  R.layout.fragment_plant_detail, container, false
+    ).apply {
+        composeView.apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            )
+            setContent {
+                MaterialTheme {
+                    PlantDetailDescription(plantDetailViewModel)
+                }
+            }
+        }
+        // ...
+    }
+    // ...
+}
+```
