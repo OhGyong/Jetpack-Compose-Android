@@ -348,3 +348,26 @@ override fun onCreateView(
     // ...
 }
 ```
+
+---
+
+## 11. Compose 요소마다 테마 재사용하기(Interop theming)
+Compose에서 View system MDC(Material Design Components) 테마를 재사용하려면
+[Accompanist Material 테마 어댑터](https://github.com/google/accompanist/tree/main/themeadapter-material)
+라이브러리를 사용하면 된다.
+`MdcTheme` 함수는 호스트 Context의 MDC 테마를 자동으로 읽고 사용자를 대신하여 밝은 테마와 어두운 테마 모두를 위해
+`MaterialTheme`로 전달한다.
+
+```kotlin
+implementation "com.google.accompanist:accompanist-themeadapter-material:$rootProject.accompanistVersion"
+```
+위의 코드를 build.gradle(app)에 등록하여 MdcTheme를 사용할 수 있도록 한다.
+
+```kotlin
+setContent {
+    MdcTheme {
+        PlantDetailDescription(plantDetailViewModel)
+    }
+}
+```
+MaterialTheme를 MdcTheme로 변경한다.
