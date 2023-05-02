@@ -1,4 +1,5 @@
-[Jetpack Compose basics Codelab](https://developer.android.com/codelabs/jetpack-compose-basics?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fjetpack-compose-for-android-developers-1%3Fhl%3Dko%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fjetpack-compose-basics#0)
+# [Jetpack Compose basics Codelab](https://developer.android.com/codelabs/jetpack-compose-basics?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fjetpack-compose-for-android-developers-1%3Fhl%3Dko%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fjetpack-compose-basics#0)
+이 프로젝트는 android-compose-codelabs의 [BasicsCodelab](https://github.com/googlecodelabs/android-compose-codelabs/tree/main/BasicsCodelab) 프로젝트를 바탕으로 Codelab에 맞춰 진행하였습니다.
 
 ## 1~2. Codelab을 시작하기 전에 Compose를 알아보자(Before you begin)
 
