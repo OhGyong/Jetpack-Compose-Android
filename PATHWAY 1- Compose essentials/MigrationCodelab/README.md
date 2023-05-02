@@ -371,3 +371,41 @@ setContent {
 }
 ```
 MaterialTheme를 MdcTheme로 변경한다.
+
+---
+
+## Compose에서의 Test(Testing)
+Activity 또는 Fragment에서 Compose를 사용한다면 `ActivityScenarioRule`을 사용하는 대신
+`ComposeTestRule`과 `ActivityScenarioRule`을 통합한 `createAndroidComposeRule`을 사용해야 한다.
+
+`ActivityScenarioRule`은 `createAndroidComposeRule`로 변경하고, 테스트를 구성하는데 Activity 규칙이필요한 경우
+`createAndroidComposeRule`의 `activityRule` 속성을 사용한다.
+
+View가 화면에 표시되는지 확인하기 위해서 `Compose assertions`를 사용한다.
+
+```kotlin
+@RunWith(AndroidJUnit4::class)
+class PlantDetailFragmentTest {
+
+    @Rule
+    @JvmField
+    val composeTestRule = createAndroidComposeRule<GardenActivity>()
+
+    // ...
+    
+    @Before
+    fun jumpToPlantDetailFragment() {
+        // ...
+        composeTestRule.activityRule.scenario.onActivity {
+            // ...
+        }
+    }
+
+    @Test
+    fun testPlantName() {
+        composeTestRule.onNodeWithText("Apple").assertIsDisplayed()
+    }
+
+    // ...
+}
+```
