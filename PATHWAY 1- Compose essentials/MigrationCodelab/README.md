@@ -279,3 +279,33 @@ private fun PlantWatering(wateringInterval: Int) {
 ```
 
 두 개의 TextView가 세로로 정렬되어 있기 때문에 `Column()`으로 래핑하고 공통으로 쓰이는 padding 속성들을 변수로 만들어서 사용하였다.
+
+---
+
+## 9. Compose에서 Html 적용하기(Views in Compose code)
+XML로 뷰를 그릴 때 TextView에 `app:renderHtml`이라는 속성으로 HTML 문자열을 렌더링할 수 있게 한다.
+그러나 Compose는 `Spanned` 클래스와 HTML을 렌더링 할 수 있는 속성을 지원하지 않는다.
+
+그래서 Compose는 `AndroidView`의 API를 사용하여 programmatically하게 TextView를 만들어야 한다.
+AndroidView를 사용하면 Factory 람다에 View를 구성할 수 있다.
+또한 View가 확장되었을 때 및 후속 재구성 시 호출될 때 `update` 람다를 제공한다.
+
+```kotlin
+@Composable
+private fun PlantDescription(description: String) {
+    val htmlDescription = remember(description) {
+        HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_COMPACT)
+    }
+
+    AndroidView(
+        factory = { context->
+            TextView(context).apply {
+                movementMethod = LinkMovementMethod.getInstance()
+            }
+        },
+        update = {
+            it.text = htmlDescription
+        }
+    )
+}
+```
