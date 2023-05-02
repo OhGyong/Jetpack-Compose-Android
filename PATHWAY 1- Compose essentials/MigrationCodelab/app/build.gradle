@@ -99,6 +99,9 @@ dependencies {
 
     implementation "com.google.accompanist:accompanist-themeadapter-material:0.30.1"
 
+    // 이미지 uri를 위한 Coil
+    implementation("io.coil-kt:coil-compose:2.3.0")
+
     // Testing dependencies
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:3.5.1"
