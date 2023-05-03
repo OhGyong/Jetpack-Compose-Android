@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +24,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -65,6 +68,7 @@ private data class DrawableStringPair(
     @DrawableRes val drawable: Int,
     @StringRes val text: Int
 )
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,11 +90,17 @@ class MainActivity : ComponentActivity() {
 fun MainView(modifier: Modifier) {
     Column(
         modifier = modifier
-            .padding(top = 16.dp, start = 8.dp, end = 8.dp)
+            .verticalScroll(rememberScrollState())
+            .padding(vertical = 16.dp)
     ) {
         SearchBar(modifier = modifier)
-        AlignYourBodyRow(modifier)
-        FavoriteCollectionsGrid(modifier)
+        HomeSection(title = R.string.align_your_body, modifier){
+            AlignYourBodyRow(modifier)
+        }
+        HomeSection(title = R.string.favorite_collections, modifier){
+            FavoriteCollectionsGrid(modifier)
+        }
+        Spacer(modifier.height(16.dp))
     }
 
 }
@@ -117,6 +127,24 @@ fun SearchBar(modifier: Modifier) {
             .fillMaxWidth()
             .heightIn(min = 56.dp)
     )
+}
+
+@Composable
+fun HomeSection(
+    @StringRes title: Int,
+    modifier: Modifier,
+    content: @Composable () -> Unit
+) {
+    Column(modifier) {
+        Text(
+            text = stringResource(title),
+            style = typography.h2,
+            modifier = modifier
+                .paddingFromBaseline(top = 40.dp, bottom = 8.dp)
+                .padding(horizontal = 16.dp)
+        )
+        content()
+    }
 }
 
 @Composable
@@ -207,7 +235,7 @@ fun FavoriteCollectionCard(
 
 @Preview(
     widthDp = 360,
-    heightDp = 640,
+    heightDp = 180,
     showBackground = true,
     backgroundColor = 0xFFF0EAE2
 )
