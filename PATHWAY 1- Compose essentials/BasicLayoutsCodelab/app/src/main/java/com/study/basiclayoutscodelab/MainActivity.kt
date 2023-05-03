@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -31,6 +30,7 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -78,13 +78,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             BasicLayoutsCodelabTheme {
-                Surface(
-                    color = MaterialTheme.colors.background,
-                    modifier = Modifier.fillMaxSize()
+                Scaffold(
+                    bottomBar = { MainNavigation()}
                 ) {
-                    val modifier = Modifier
-                    MainNavigation(modifier)
-                    MainView(modifier)
+                    MainView(Modifier.padding(it))
                 }
             }
         }
@@ -92,7 +89,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun MainNavigation(modifier: Modifier) {
+private fun MainNavigation(modifier: Modifier = Modifier) {
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.background,
         modifier = modifier
@@ -123,27 +120,27 @@ private fun MainNavigation(modifier: Modifier) {
             selected = false,
             onClick = {}
         )
-        
+
     }
 }
 
 @Composable
-fun MainView(modifier: Modifier) {
+fun MainView(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
             .padding(vertical = 16.dp)
     ) {
-        SearchBar(modifier = modifier)
-        HomeSection(title = R.string.align_your_body, modifier){
-            AlignYourBodyRow(modifier)
+        Spacer(Modifier.height(16.dp))
+        SearchBar(Modifier.padding(horizontal = 16.dp))
+        HomeSection(R.string.align_your_body){
+            AlignYourBodyRow()
         }
-        HomeSection(title = R.string.favorite_collections, modifier){
-            FavoriteCollectionsGrid(modifier)
+        HomeSection(R.string.favorite_collections){
+            FavoriteCollectionsGrid()
         }
-        Spacer(modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
     }
-
 }
 
 @Composable
@@ -173,7 +170,7 @@ fun SearchBar(modifier: Modifier) {
 @Composable
 fun HomeSection(
     @StringRes title: Int,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Column(modifier) {
@@ -189,7 +186,7 @@ fun HomeSection(
 }
 
 @Composable
-fun AlignYourBodyRow(modifier: Modifier) {
+fun AlignYourBodyRow(modifier: Modifier = Modifier) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp) ,
         contentPadding = PaddingValues(horizontal = 16.dp),
@@ -205,7 +202,7 @@ fun AlignYourBodyRow(modifier: Modifier) {
 fun AlignYourBodyElement(
     @DrawableRes drawable: Int,
     @StringRes text: Int,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -215,7 +212,7 @@ fun AlignYourBodyElement(
             painter = painterResource(drawable),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier
+            modifier = modifier
                 .size(88.dp)
                 .clip(CircleShape)
         )
@@ -229,9 +226,7 @@ fun AlignYourBodyElement(
 }
 
 @Composable
-fun FavoriteCollectionsGrid(
-    modifier: Modifier
-) {
+fun FavoriteCollectionsGrid(modifier: Modifier = Modifier) {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(2),
         contentPadding = PaddingValues(horizontal = 16.dp),
@@ -276,7 +271,7 @@ fun FavoriteCollectionCard(
 
 @Preview(
     widthDp = 360,
-    heightDp = 180,
+    heightDp = 600,
     showBackground = true,
     backgroundColor = 0xFFF0EAE2
 )
