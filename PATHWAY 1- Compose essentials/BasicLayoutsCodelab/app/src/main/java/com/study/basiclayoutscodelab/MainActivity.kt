@@ -120,7 +120,6 @@ private fun MainNavigation(modifier: Modifier = Modifier) {
             selected = false,
             onClick = {}
         )
-
     }
 }
 
