@@ -302,3 +302,22 @@ Material에서 제공하는 icon을 쓰려면 gradle(app)에 material-icons를 �
 ```kotlin
 implementation "androidx.compose.material:material-icons-extended"
 ```
+
+---
+
+## 12. Scaffold 사용하기(MySoothe App - Scaffold)
+`Scaffold` Composable은 Material Design을 구현하는 앱을 위한 `최상위 수준의 Composable`을 제공하며,
+Composable의 레이아웃을 정의하고 관리하는데 사용된다.
+
+여기에는 Slot 패턴도 포함되어 있는데, 그 중 하나가 바텀 네비게이션이다.
+```kotlin
+MySootheTheme {
+  Scaffold(
+    bottomBar = { SootheBottomNavigation() }
+  ) { padding ->
+    HomeScreen(Modifier.padding(padding))
+  }
+}    
+```
+
+bottomBar에 바텀 네비게이션 Composable을 전달하면 바텀 네비게이션인지 자동으로 인식하여 레이아웃 배치를 해준다.
