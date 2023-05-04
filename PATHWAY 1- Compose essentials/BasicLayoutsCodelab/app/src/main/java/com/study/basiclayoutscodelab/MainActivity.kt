@@ -187,7 +187,7 @@ fun HomeSection(
 @Composable
 fun AlignYourBodyRow(modifier: Modifier = Modifier) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp) ,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
         modifier = modifier
     ) {
