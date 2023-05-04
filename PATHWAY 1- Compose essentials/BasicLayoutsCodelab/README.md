@@ -239,3 +239,24 @@ fun HomeSection(
 
 위 코드를 보면 content라는 Composable 함수를 매개변수로 사용하고 있다.
 이렇게 후행 람다를 사용하여 콘텐츠를 채울 수 있다.
+
+---
+
+## 10. 
+`Spacer` Composable은 고정 크기 공간을 확보하는데 사용된다.
+> XMl에서 View와 비슷한 거 같다.
+
+lazy 레이아웃을 사용하면 자동으로 스크롤 동작이 추가되는데, 리스트에 포함된 요소의 개수가 많지 않은 경우 `verticalScroll`
+또는 `horizontalScroll`을 사용하여 수동으로스크롤을 추가할 수 있다.
+
+이때 스크롤의 현재 State와 외부에서 스크롤 State를 수정하는데 사용되는 `ScrollState`가 필요하다.
+스크롤의 State를 수정할 필요가 없을 때는 `rememberScrollState`를 사용하여 영구 ScrollState 인스턴스를 만든다.
+```kotlin
+Column(
+  modifier
+    .verticalScroll(rememberScrollState())
+    .padding(vertical = 16.dp)
+) {
+  // ...
+}   
+```
