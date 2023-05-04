@@ -36,14 +36,68 @@ TextField(
         .heightIn(min = 56.dp)
 )
 ```
-TextField 내부에 아이콘을 삽입하려면 `leadingIcon`을 사용한다.
-contentDescription을 null로 설정한 이유는 `placeholder`에서 이미 TextField에 대한 설명을 하고 있기 때문이다.
-
-TextField의 배경색을 MaterialTheme의 `surface`와 같은 색으로 하려면 `TextFieldDefaults.textFieldColors`
-를 사용하여 특정 색상을 재정의한다.
+- TextField 내부에 아이콘을 삽입하려면 `leadingIcon`을 사용한다.
+  contentDescription을 null로 설정한 이유는 `placeholder`에서 이미 TextField에 대한 설명을 하고 있기 때문이다.
+- TextField의 배경색을 MaterialTheme의 `surface`와 같은 색으로 하려면 `TextFieldDefaults.textFieldColors`
+  를 사용하여 특정 색상을 재정의한다.
+- `heightIn`은 최소 높이를 지정한다. 
+  최소 높이를 지정한 것이기 때문에 시스템의 글꼴과 같은 설정을 확대하면 높이가 늘어날 수 있다.(권장되는 방식이라 함.)
+- `fillMaxWidth`은 상위 요소의 전체 가로 공간을 차지하도록 지정한다.
 > TextField는 XMl의 EditText와 유사하다.
 
-`heightIn`은 최소 높이를 지정한다.
-최소 높이를 지정한 것이기 때문에 시스템의 글꼴과 같은 설정을 확대하면 높이가 늘어날 수 있다.(권장되는 방식이라 함.)
+---
 
-`fillMaxWidth`은 상위 요소의 전체 가로 공간을 차지하도록 지정한다.
+## 5. Image, Alignment에 대해서(Align your body - Alignment)
+이미지를 삽입하기 위해서 `Image` Composable을 사용한다.
+```kotlin
+Image(
+    painter = painterResource(R.drawable.ab1_inversions),
+    contentDescription = null,
+    contentScale = ContentScale.Crop,
+    modifier = Modifier
+        .size(88.dp)
+        .clip(CircleShape)
+)
+```
+- `paintResource`는 Compose에서 이미지를 로드한다.
+- `contentScale`은 이미지의 크기와 컨테이너 사이의 크기를 조절한다.
+- `Modifier.shape`은 fillMaxWidth와 heightIn처럼 Composable의 크기를 조정한다.
+- `Modifier.clip`은 Composable의 모양을 조정한다.
+
+<br>
+
+상위 컨테이너에서 하위 Composable을 정렬하려면 상위 컨테이너에서 `alignment`를 설정한다.
+```kotlin
+Column(
+  horizontalAlignment = Alignment.CenterHorizontally,
+  modifier = modifier
+) {
+  Image(
+    //..
+  )
+  Text(
+    //..
+  )
+}   
+```
+
+정렬 속성은 아래와 같다.
+
+- Coloumn
+  - Start
+  - CenterHorizontally
+  - End
+- Row
+  - Top
+  - CenterVertically
+  - Bottom
+- Box
+  - TopStart
+  - TopCenter
+  - TopEnd
+  - CenterStart
+  - Center
+  - CenterEnd
+  - BottomStart
+  - BottomCenter
+  - BottomEnd
