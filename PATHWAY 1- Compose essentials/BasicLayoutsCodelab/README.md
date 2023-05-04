@@ -260,3 +260,45 @@ Column(
   // ...
 }   
 ```
+
+---
+
+## 11. 바텀 네비게이션 사용하기(Bottom navigation - Material)
+Compose Material 라이브러리의 일부인 `BottomNavigation` Composable을 사용하면 쉽게 바텀 네비게이션을 구현할 수 있다.
+BottomNavigation Composable 내에서 하나 이상의 `BottomNavigationItem` 요소를 추가하면
+Materail 라이브러리에 의해 자동으로 스타일이 지정된다.
+```kotlin
+BottomNavigation(modifier) {
+  BottomNavigationItem(
+    icon = {
+      Icon(
+        imageVector = Icons.Default.Spa,
+        contentDescription = null
+      )
+    },
+    label = {
+      Text(stringResource(R.string.bottom_navigation_home))
+    },
+    selected = true,
+    onClick = {}
+  )
+  BottomNavigationItem(
+    icon = {
+      Icon(
+        imageVector = Icons.Default.AccountCircle,
+        contentDescription = null
+      )
+    },
+    label = {
+      Text(stringResource(R.string.bottom_navigation_profile))
+    },
+    selected = false,
+    onClick = {}
+  )
+}   
+```
+
+Material에서 제공하는 icon을 쓰려면 gradle(app)에 material-icons를 등록해야한다.
+```kotlin
+implementation "androidx.compose.material:material-icons-extended"
+```
