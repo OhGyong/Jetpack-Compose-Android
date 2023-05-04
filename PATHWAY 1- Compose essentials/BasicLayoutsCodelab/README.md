@@ -186,3 +186,56 @@ LazyHorizontalGrid(
 ```
 
 - `GridCells.Fixed`를 사용하여 그리드의 row 개수를 고정하여 모양을 조정할 수 있다.
+
+---
+
+## 9. Slot API의 사용하기(Home section - Slot APIs)
+몇몇 앱을 보면 동일한 패턴을 따르는 여러 `섹션(sections)`이 존재한다.
+예를 들어 각 센션은 제목이 있고 제목 아래에는 다른 콘텐츠가 표시된다.
+
+이런 섹션들은 콘텐츠에 따라 제목이 다른 경우가 많은데, 이 부분을 `Slot API`를 사용하여 동적으로 채울 수 있다.
+> Slot API는 함수가 아니라 Composable에서 하위 요소에 대해 Compose 요소를 전달하기 위한 패턴을 말함.
+
+Slot을 기반으로 보다 유연한 레이아웃을 만들 수 있다.
+
+```kotlin
+@Composable
+fun MainView(modifier: Modifier = Modifier) {
+  Column(
+    modifier = modifier
+      .verticalScroll(rememberScrollState())
+      .padding(vertical = 16.dp)
+  ) {
+    Spacer(Modifier.height(16.dp))
+    SearchBar(Modifier.padding(horizontal = 16.dp))
+    HomeSection(R.string.align_your_body){
+      AlignYourBodyRow()
+    }
+    HomeSection(R.string.favorite_collections){
+      FavoriteCollectionsGrid()
+    }
+    Spacer(Modifier.height(16.dp))
+  }
+}
+
+@Composable
+fun HomeSection(
+   @StringRes title: Int,
+   modifier: Modifier = Modifier,
+   content: @Composable () -> Unit
+) {
+   Column(modifier) {
+       Text(
+           text = stringResource(title).uppercase(Locale.getDefault()),
+           style = MaterialTheme.typography.h2,
+           modifier = Modifier
+               .paddingFromBaseline(top = 40.dp, bottom = 8.dp)
+               .padding(horizontal = 16.dp)
+       )
+       content()
+   }
+}
+```
+
+위 코드를 보면 content라는 Composable 함수를 매개변수로 사용하고 있다.
+이렇게 후행 람다를 사용하여 콘텐츠를 채울 수 있다.
