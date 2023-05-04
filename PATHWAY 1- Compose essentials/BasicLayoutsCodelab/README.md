@@ -101,3 +101,88 @@ Column(
   - BottomStart
   - BottomCenter
   - BottomEnd
+
+---
+
+## 6. Material Surface 활용하기(Favorite collection card - Material Surface)
+화면의 배경과 화면 내부의 컨테이너 배경이 다른 색으로 적용되어 있는 경우가 있다.
+이럴 때는 `Surface` Composable을 사용해서 테마를 조정해 볼 수 있다.
+```kotlin
+Surface(
+  shape = MaterialTheme.shapes.small,
+  modifier = modifier
+) {
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier.width(192.dp)
+  ) {
+    Image(
+      painter = painterResource(drawable),
+      contentDescription = null,
+      contentScale = ContentScale.Crop,
+      modifier = Modifier.size(56.dp)
+    )
+    Text(
+      text = stringResource(text),
+      style = MaterialTheme.typography.h3,
+      modifier = Modifier.padding(horizontal = 16.dp)
+    )
+  }
+}    
+```
+
+---
+
+## 7. Row 정렬하기(Align your body row - Arrangements)
+Compose에서는 `LazyRow` Composable을 사용해서 행으로 스크롤 가능한 UI를 구현할 수 있다.
+LazyRow를 그대로 사용하면 내부 아이템 간의 간격으로 UI가 답답해 보일 수 있다.
+
+간격을 조절하려면 `arrangements`에 대해 알아야 한다.
+컨테이너의 `main-axis`에 하위 Composable을 배치하는 방식은 아래와 같다.
+- Equal Weigh
+- Space Between
+- Space Around
+- Space Evenly
+- End(Row에서) / Top(Column에서)
+- Center
+- Start(Row에서) / Bottom(Column에서)
+
+위 배치 외에 `Arrangement.spacedBy()`를 사용하면 각 하위 Composable 사이에 고정된 공간을 추가할 수 있다.
+```kotlin
+LazyRow(
+  horizontalArrangement = Arrangement.spacedBy(8.dp),
+  contentPadding = PaddingValues(horizontal = 16.dp),
+  modifier = modifier
+) {
+    // ...
+  }
+}    
+```
+
+- `contentPadding`은 컨테이너 내부의 항목에 동일한 패딩을 유지하되 상위 목록의 경계 내에서 콘텐츠를 자르지 않고 스크롤 할 수 있도록
+  padding을 부여할 수 있다.
+
+---
+
+## 8. LazyHorizontalGrid 사용하기(Favorite collections grid-Lazy grids)
+LazyRow에 Column을 갖도록 하여 Grid 형태의 UI를 구현할 수 있지만, `LazyHorizontalGrid`를 사용하면 
+쉽고 효과적으로 구현할 수 있다.
+```kotlin
+LazyHorizontalGrid(
+  rows = GridCells.Fixed(2),
+  contentPadding = PaddingValues(horizontal = 16.dp),
+  horizontalArrangement = Arrangement.spacedBy(8.dp),
+  verticalArrangement = Arrangement.spacedBy(8.dp),
+  modifier = modifier.height(120.dp)
+) {
+  items(favoriteCollectionsData) { item ->
+    FavoriteCollectionCard(
+      drawable = item.drawable,
+      text = item.text,
+      modifier = Modifier.height(56.dp)
+    )
+  }
+}    
+```
+
+- `GridCells.Fixed`를 사용하여 그리드의 row 개수를 고정하여 모양을 조정할 수 있다.
