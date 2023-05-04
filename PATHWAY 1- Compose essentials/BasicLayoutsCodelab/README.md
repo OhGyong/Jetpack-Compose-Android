@@ -242,7 +242,7 @@ fun HomeSection(
 
 ---
 
-## 10. 
+## 10. Spacer와 Scroll 사용하기(Home screen - Scrolling)
 `Spacer` Composable은 고정 크기 공간을 확보하는데 사용된다.
 > XMl에서 View와 비슷한 거 같다.
 
