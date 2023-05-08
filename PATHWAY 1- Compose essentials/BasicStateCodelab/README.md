@@ -107,3 +107,9 @@ Button에 enable 속성을 주는 방법은 아래와 같다.
 ```kotlin
 Button(onClick = { count++}, Modifier.padding(top = 8.dp), enabled = count<10)
 ```
+
+---
+
+## 7.Composition의 Remember(Remember in Composition)
+`remember`는 Composition에 객체를 저장하고, remember가 호출되는 소스 위치가 Recomposition 중에
+다시 호출되지 않으면 객체를 삭제한다.
