@@ -81,3 +81,29 @@ val count: MutableState<Int> = remember { mutableStateOf(0) }
 ```kotlin
 var count by remember {mutableStateOf(0)}
 ```
+
+---
+
+## 6. State 기반의 UI(State driven UI)
+Compose는 선언형 UI 프레임워크이다.
+State가 변경될 때 UI Component를 삭제하거나 visibility 속성을 변경하는 대신
+특정 State의 조건에서 UI가 어떻게 존재하는지를 설명한다.
+Recompose가 호출되고 UI가 업데이트된 결과, Composable이 결국 Composable을
+시작하거나 종료할 수 있다.
+
+이 접근 방식을 사용하면 View 시스템과 마찬가지로 View를 수동으로 업데이트하는 복잡성을 방지할 수 있다.
+새 State에 따라 View를 업데이트하는 일이 자동으로 발생하므로 오류도 적게 발생한다.
+
+[Android Studio의 Layout Inspector 도구](https://developer.android.com/studio/debug/layout-inspector?hl=ko)
+를 사용하여 Compose에서 생성된 앱 레이아웃을 검사할 수 있다.
+~~~
+`Tools > Layout Inspector`에 Layout Inspector가 존재한다.<br>
+참고로 API가 29 이상인 기기이어야 한다.
+~~~
+
+<br>
+
+Button에 enable 속성을 주는 방법은 아래와 같다.
+```kotlin
+Button(onClick = { count++}, Modifier.padding(top = 8.dp), enabled = count<10)
+```
