@@ -142,3 +142,17 @@ Column(modifier = modifier.padding(16.dp)) {
 
 위와 같은 코드에서 count 값이 0으로 변경될 경우 showTask는 호출되는 코드 위치가 호출되지 않기 때문에 삭제된다.
 따라서 showTask의 이전 값은 저장되지 않고 초기화된다.
+
+---
+
+## 8. Compose에서 state 복원(Restore state in Compose)
+화면의 회전, 다크 모드 전환, 언어 변경 등과 같은 구성 변경을 하면 Activity는 재실행되기 때문에 저장된 state가 삭제된다.
+remember를 사용하면 Recomposition 간에 State를 유지하는 데 도움이 되지만 구성 변경 간에는 유지되지 않는다.
+이를 위해서 remember 대신 `rememberSaveable`을 사용해야 한다.
+
+rememberSaveable은 Bundle에 저장할 수 있는 모든 값을 자동으로 저장한다.
+~~~
+Bundle은 데이터를 key-value 쌍으로 저장하는 컨테이너.
+~~~
+
+앱의 State 및 요구사항에 따라 remember를 사용할지 rememberSaveable을 사용할지 고려해야 한다.
