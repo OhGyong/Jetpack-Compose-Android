@@ -156,3 +156,58 @@ Bundle은 데이터를 key-value 쌍으로 저장하는 컨테이너.
 ~~~
 
 앱의 State 및 요구사항에 따라 remember를 사용할지 rememberSaveable을 사용할지 고려해야 한다.
+
+---
+
+## 9. State hoisting
+remember를 사용하여 객체를 저장하는 Composable에는 내부 State가 포함되어 있어 Composable을 `Stateful`로 만든다.
+이는 호출자가 State를 제어할 필요가 없고 State를 직접 관리하지 않아도 State를 사용할 수 있는 경우에 유용하다.
+그러나 내부 State를 갖는 Composable은 재사용 가능성이 적고 테스트하기가 더 어려운 경향이 있다.
+
+반면 State를 보유하지 않는 Composable을 `Stateless` Composable이라고 한다.
+State hoisting을 사용하면 Stateless Composable을 쉽게 만들 수 있다.
+
+Compose에서 State hoisting은 Composable을 Stateless로 만들기 위해 State를 Composable의 호출자로 옮기는 패턴이다.
+Jetpack Compose에서 State hoisting을 위한 일반적 패턴은 State 변수를 다음 두 개의 매개변수로 바꾸는 것이다.
+- `value: T` - 표시할 현재 값
+- `onValueChange: (T) -> Unit` - 값을 변경하도록 요청하는 이벤트(T는 제안된 새로운 값)
+
+~~~
+State가 내려가고 Event가 올라가는 패턴을 단방향 데이터 흐름(UDF)이라고 하며,
+State hoisting은 이 아키텍처를 Compose에서 구현하는 방법이다.
+~~~
+
+Hoiested State는 몇 가지 속성을 갖는다.
+- 단일 소스 저장소 : State를 복제하는 대신 옮겼기 때문에 소스 저장소가 하나만 있다.(버그 방지에 도움)
+- 공유 가능함 : Hoisted State를 여러 Composable과 공유할 수 있다.
+- 가로채기 가능함 : Stateless Composable의 호출자는 State를 변경하기 전에 Event를 무시할지 수정할지 결정할 수 있다.
+- 분리됨 : Stateless Comoposable 함수의 State는 어디에든(ViewModel) 저장할 수 있다.
+
+```kotlin
+@Composable
+fun StatefulCounter() {
+    var waterCount by remember { mutableStateOf(0) }
+
+    var juiceCount by remember { mutableStateOf(0) }
+
+    StatelessCounter(waterCount, { waterCount++ })
+    StatelessCounter(juiceCount, { juiceCount++ })
+}
+```
+
+```kotlin
+@Composable
+fun StatefulCounter() {
+   var count by remember { mutableStateOf(0) }
+
+   StatelessCounter(count, { count++ })
+   AnotherStatelessMethod(count, { count *= 2 })
+}
+```
+
+위 코드는 재사용성과 여러 Composable 함수에 동일한 State를 제공할 수 있음의 예시이다.
+
+State를 hoisting 할 때 State의 이동 위치를 쉽게 파악할 수 있는 세 가지 규칙이 있다.
+1. State는 적어도 그 상태를 사용하는 모든 Composable의 가장 낮은 공통 상위 요소에 배치해야 한다.
+2. State는 최소한 변경될 수 있는 가장 높은 수준으로 배치해야 한다.
+3. 두 State가 동일한 이벤트에 대한 응답으로 변경되는 경우 두 State는 동일한 수준에 배치해야 한다.
