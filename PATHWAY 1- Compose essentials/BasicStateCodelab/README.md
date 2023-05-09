@@ -113,3 +113,32 @@ Button(onClick = { count++}, Modifier.padding(top = 8.dp), enabled = count<10)
 ## 7.Composition의 Remember(Remember in Composition)
 `remember`는 Composition에 객체를 저장하고, remember가 호출되는 소스 위치가 Recomposition 중에
 다시 호출되지 않으면 객체를 삭제한다.
+
+```kotlin
+Column(modifier = modifier.padding(16.dp)) {
+    var count by remember { mutableStateOf(0) }
+
+    if(count > 0) {
+        var showTask by remember { mutableStateOf(true) }
+        if(showTask) {
+            WellnessTaskItem(
+                taskName = "Have you taken your 15 minute walk today?",
+                onClose = { showTask=false }
+            )
+        }
+        Text(text = "You've had $count glasses.")
+    }
+
+    Row(Modifier.padding(top = 8.dp)) {
+        Button(onClick = { count++}, Modifier.padding(top = 8.dp), enabled = count<10) {
+            Text(text = "Add one")
+        }
+        Button(onClick = { count=0 }, Modifier.padding(start=8.dp)) {
+            Text(text = "Clear water count")
+        }
+    }
+}
+```
+
+위와 같은 코드에서 count 값이 0으로 변경될 경우 showTask는 호출되는 코드 위치가 호출되지 않기 때문에 삭제된다.
+따라서 showTask의 이전 값은 저장되지 않고 초기화된다.
