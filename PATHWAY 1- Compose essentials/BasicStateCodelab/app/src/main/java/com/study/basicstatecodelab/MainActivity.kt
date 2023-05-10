@@ -63,7 +63,7 @@ fun StatelessCounter(count: Int, onIncrement: ()-> Unit, modifier: Modifier = Mo
 
 @Composable
 fun WellnessTaskItem(taskName: String, modifier: Modifier = Modifier) {
-    var checkedState by remember { mutableStateOf(false) }
+    var checkedState by rememberSaveable { mutableStateOf(false) }
 
     WellnessTaskItem(
         taskName = taskName,

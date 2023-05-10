@@ -215,3 +215,28 @@ State를 hoisting 할 때 State의 이동 위치를 쉽게 파악할 수 있는 
 ---
 
 ## 10. 리스트(Work with lists)
+Composition을 종료하면 remember를 해도 State가 삭제된다고 언급했었다.
+`LazyColumn`에 있는 항목의 경우 스크롤을 할 때 지나친 항목은 Composition이 삭제되기 때문에
+체크와 같은 설정이 초기화 되는 것을 확인할 수 있다.
+이 문제를 해결하려면 `rememberSaveable`을 사용해야 한다.
+
+`LazyColumn`의 구조를 살펴보자.<br>
+```kotlin
+@Composable
+fun LazyColumn(
+    ...
+    state: LazyListState = rememberLazyListState(),
+    ...
+) {
+    ...
+}
+```
+
+Composable 함수인 `rememberLazyListState`는 `rememberSaveable`을 사용하여 리스트의 초기 상태를 만든다.
+Activity가 다시 생성되면 스크롤의 State는 아무런 처리를 하지 않아도 유지가 된다.
+
+많은 앱이 스크롤 위치, 스크롤 레이아웃의 변경사항, 스크롤 상태와 관련된 기타 이벤트에 반응하고 이를 수신 대기해야 한다.
+`Lazy~` 함수들은 `LazyListState`를 hoisting하여 이 사례를 지원한다.
+
+`remember~` 함수에서 제공하는 기본값이 포함된 State 매개변수가 있는 것이 Composable 내장 함수에서 일반적인 패턴이다.
+`rememberScaffoldState`를 사용하여 State를 hoisting하는 `Scaffold`에서 또 다른 예를 확인할 수 있다.
