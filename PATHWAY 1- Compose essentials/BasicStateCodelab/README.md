@@ -300,3 +300,89 @@ mutableStateListOf 또는 toMutableStateList 함수는 SnapshotStateList<T> 유�
 <br>
 
 Lazy 함수에서 items의 매개변수 중 `key`는 리스트의 아이템이 갖는 고유 식별자를 나타낸다.
+
+---
+
+## 12. ViewModel에서의 State(State in ViewModel)
+화면에 표시되는 State는 계층 구조의 다른 레이어들에서도 사용된다.
+UI State는 화면에 표시할 내용을 설명하지만 앱의 로직은 앱의 동작 방식을 설명하고 State 변경에 반응해야 한다.
+로직의 유형으로 UI 로직(UI behavior) 그리고 비즈니스 로직 두 가지가 있다.
+- UI 로직은 화면에 State 변경을 표시하는 방법(navigation logic, snackbars 표시 등)과 관련있다.
+- 비즈니스 로직은 State 변경 시(결제하기, 사용자 환경설정 저장) 실행할 작업과 관련있다.
+  이 로직은 대게 비즈니스 레이어나 데이터 레이어에 배치되고 UI 레이어에는 배치되지 않는다.
+
+`ViewModel`은 UI State와 앱의 다른 레이어에 있는 비즈니스 로직에 대한 액세스 권한을 제공한다.
+또한 ViewModel은 구성 변경 이후에도 유지되기 때문에 Composition보다 전체 기간이 더 길다.
+~~~
+ViewModel과 Composable 둘 다 Activity와는 별개의 생명 주기를 갖고 있지만
+Composable은 화면이 재생성될 때 Recomposition이 발생하면서 영향을 받고
+ViewModel은 영향을 받지 않기 때문에 ViewModel이 더 오래 존재한다고 볼 수 있음
+
+그리고 Composeable에서 만든 State를 ViewModel에서 사용하게 될 경우
+메모리 누수가 발생할 수 있기 때문에 주의해야 함
+~~~
+
+Composeable에서 viewModel() 함수로 ViewModel에 접근할 수 있도록
+build.gradle(app)에 아래 라이브러리를 추가한다.
+```groovy
+implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+```
+
+<br>
+
+Composable에서 ViewModel에 접근.
+```kotlin
+@Composable
+fun WellnessScreen(
+    modifier: Modifier = Modifier,
+    wellnessViewModel: WellnessViewModel = viewModel()
+) {
+   Column(modifier = modifier) {
+       StatefulCounter()
+
+       WellnessTasksList(
+           list = wellnessViewModel.tasks,
+           onCloseTask = { task -> wellnessViewModel.remove(task) })
+   }
+}
+```
+
+`viewModel()`은 기존 ViewModel을 반환하거나 지정된 범위에서 새 ViewModel을 생성한다.
+ViewModel 인스턴스는 범위가 활성화되어 있는 동안 유지된다.
+~~~
+ViewModel은 Navigation 그래프의 Activity, Fragment 또는 Destination에서 호출되는
+최상단 Composable에서 사용하는 것이다.
+또한 ViewModel은 다른 Composable로 전달되면 안된다.
+대신 필요한 데이터와 필수 로직을 실행하는 함수만 매개변수로 전달해야 한다.
+~~~
+
+<br>
+
+```kotlin
+data class WellnessTask(
+    val id: Int,
+    val label: String,
+    var checked: Boolean = false
+)
+```
+data class에서 값의 변경을 추적하도록 MutableState를 사용하려면 위의 코드를 아래 코드로 변경한다.
+```kotlin
+data class WellnessTask(
+    val id: Int,
+    val label: String,
+    val checked: MutableState<Boolean> = mutableStateOf(false)
+)
+```
+
+<br>
+
+이 코드를 속성 위임을 사용하여 더 간단하게 표현하면 다음과 같다.
+```kotlin
+class WellnessTask(
+  val id: Int,
+  val label: String,
+  initialChecked: Boolean = false
+){
+  var checked by mutableStateOf(initialChecked)
+}
+```
