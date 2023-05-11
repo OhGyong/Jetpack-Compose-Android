@@ -240,3 +240,63 @@ Activity가 다시 생성되면 스크롤의 State는 아무런 처리를 하지
 
 `remember~` 함수에서 제공하는 기본값이 포함된 State 매개변수가 있는 것이 Composable 내장 함수에서 일반적인 패턴이다.
 `rememberScaffoldState`를 사용하여 State를 hoisting하는 `Scaffold`에서 또 다른 예를 확인할 수 있다.
+
+---
+
+## 11. Observable MutableList
+리스트의 항목을 삭제하려면 `MutableList`로 만들어야 한다.
+하지만 ArrayList나 mutableListOf를 사용하면 원하는 결과를 얻지 못한다.
+리스트의 항목이 변경되었을 때 UI의 Recomposition을 예약한다고 Compose에 알리지 않기 때문이다.
+
+때문에 Compose에 Observable한 MutableList 인스턴스를 만들어야 한다.
+이 구조를 사용해야 Compose가 항목이추가되거나 리스트에서 삭제도리 때 변경사항을 추적하여 UI를 Recomposition 할 수 있다.
+
+확장 함수인 `toMutableStateList()`를 사용하면 변경 가능하거나 변경 불가능한 초기 Collection(List 등)에서
+Observable한 MutableList를 만들 수 있다.
+```kotlin
+@Composable
+fun WellnessScreen(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        StatefulCounter()
+
+        val list = remember { getWellnessTasks().toMutableStateList() }
+        WellnessTasksList(list = list, onCloseTask = {task -> list.remove(task)})
+    }
+}
+
+private fun getWellnessTasks() = List(30) {i -> WellnessTask(i, "Task # $i")}
+```
+
+다른 방법으로는 `mutableStateLisftOf`를 사용하여 Observable한 
+MutableList를 만들고 Initial State의 요소를 추가할 수 있다.
+```kotlin
+@Composable
+fun WellnessScreen(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        StatefulCounter()
+
+        val list = remember {
+            mutableStateListOf<WellnessTask>().apply { addAll(getWellnessTasks()) }
+        }
+        WellnessTasksList(list = list, onCloseTask = {task -> list.remove(task)})
+    }
+}
+
+private fun getWellnessTasks() = List(30) {i -> WellnessTask(i, "Task # $i")}
+
+```
+
+<br>
+
+remember 대신 rememberSaveable을 사용하면 앱 크래시가 발생한다.
+rememberSaveable은 Bundle에 데이터를 저장하는데 Bundle에 지원되는 데이터 타입에 
+MutableList는 지원되지 않는다.
+~~~
+참고 :
+mutableStateOf 함수는 MutableState<T> 유형의 객체를 반환한다.<br>
+mutableStateListOf 또는 toMutableStateList 함수는 SnapshotStateList<T> 유형의 객체를 반환한다.
+~~~
+
+<br>
+
+Lazy 함수에서 items의 매개변수 중 `key`는 리스트의 아이템이 갖는 고유 식별자를 나타낸다.
