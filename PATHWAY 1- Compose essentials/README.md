@@ -198,3 +198,16 @@ Compose에서는 새 데이터를 사용하여 구성 가능한 함수를 다시
 - slot API를 사용하여 유연한 Composable을 빌드하는 방법
 
 ![ezgif com-gif-maker](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/89ac4e4f-5f0c-4561-9e27-21707b0e7413)
+
+---
+
+## 6. State in Jetpack Compose
+[BasicState Codelab](https://github.com/OhGyong/Jetpack-Compose-Android/tree/main/PATHWAY%201-%20Compose%20essentials/BasicStateCodelab)
+- Jetpack Compose UI에서 State와 Event를 고려하고 사용하는 방법
+- State hoisting의 개념과 Stateful/Stateless에 대해
+- `State<T>` API를 사용하여 State를 추적하는 방법
+- `remember`와 `rememberSaveable` API 사용하는 방법
+- `mutableStateListOf` 및 `toMutableStateList` API 사용하는 방법
+- Compose와 ViewModel을 사용하는 방법
+
+![ezgif com-gif-maker](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/89d05423-0825-4107-976f-f74de6788b2f)

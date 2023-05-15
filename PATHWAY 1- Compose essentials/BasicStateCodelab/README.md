@@ -97,7 +97,7 @@ Recompose가 호출되고 UI가 업데이트된 결과, Composable이 결국 Com
 [Android Studio의 Layout Inspector 도구](https://developer.android.com/studio/debug/layout-inspector?hl=ko)
 를 사용하여 Compose에서 생성된 앱 레이아웃을 검사할 수 있다.
 ~~~
-`Tools > Layout Inspector`에 Layout Inspector가 존재한다.<br>
+`Tools > Layout Inspector`에 Layout Inspector가 존재한다.
 참고로 API가 29 이상인 기기이어야 한다.
 ~~~
 
@@ -293,7 +293,7 @@ rememberSaveable은 Bundle에 데이터를 저장하는데 Bundle에 지원되�
 MutableList는 지원되지 않는다.
 ~~~
 참고 :
-mutableStateOf 함수는 MutableState<T> 유형의 객체를 반환한다.<br>
+mutableStateOf 함수는 MutableState<T> 유형의 객체를 반환한다.
 mutableStateListOf 또는 toMutableStateList 함수는 SnapshotStateList<T> 유형의 객체를 반환한다.
 ~~~
 
@@ -386,3 +386,7 @@ class WellnessTask(
   var checked by mutableStateOf(initialChecked)
 }
 ```
+
+---
+
+![ezgif com-gif-maker](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/89d05423-0825-4107-976f-f74de6788b2f)
