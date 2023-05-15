@@ -321,3 +321,7 @@ MySootheTheme {
 ```
 
 bottomBar에 바텀 네비게이션 Composable을 전달하면 바텀 네비게이션인지 자동으로 인식하여 레이아웃 배치를 해준다.
+
+---
+
+![ezgif com-gif-maker](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/89ac4e4f-5f0c-4561-9e27-21707b0e7413)

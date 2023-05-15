@@ -189,10 +189,12 @@ Compose에서는 새 데이터를 사용하여 구성 가능한 함수를 다시
 
 ---
 
-## 5. Basic layouts in Compose 
+## 5. Basic layouts in Compose
 [BasicLayouts Codelab](https://github.com/OhGyong/Jetpack-Compose-Android/tree/main/PATHWAY%201-%20Compose%20essentials/BasicLayoutsCodelab)
 - Modifier를 사용하여 Composable을 채우는 법
 - Column 및 LazyRow와 같은 표준 레이아웃 Compose 요소로 하위 Composable을 배치하는 방법
 - 정렬과 배치로 상위 Composable 내에서 하위 Composable 위치를 변경하는 법
 - Scaffold 및 Bottom Navigation과 같은 Material Composable을 사용하여 포괄적인 레이아웃을 만드는 방법
 - slot API를 사용하여 유연한 Composable을 빌드하는 방법
+
+![ezgif com-gif-maker](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/89ac4e4f-5f0c-4561-9e27-21707b0e7413)
