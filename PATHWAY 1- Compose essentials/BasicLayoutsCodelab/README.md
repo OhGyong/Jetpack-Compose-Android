@@ -2,6 +2,8 @@
 
 이 프로젝트는 android-compose-codelabs의 [BasicLayoutsCodelab](https://github.com/googlecodelabs/android-compose-codelabs/tree/main/BasicLayoutsCodelab) 프로젝트를 바탕으로 Codelab에 맞춰 진행하였습니다.
 
+---
+
 ## 1~3. 프로젝트 소개, 설정, 계획
 UI 도구 키트인 Compose를 사용하면 앱 디자인을 쉽게 구현할 수 있다.
 개발자가 UI의 디자인을 기술하면 Compose가 화면에 그리는 작업을 처리한다.
