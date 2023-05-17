@@ -14,15 +14,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -35,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import com.study.basicthemingcodelab.data.Post
 import com.study.basicthemingcodelab.data.PostRepo
@@ -53,7 +57,7 @@ fun Home() {
                 item {HomeSection("Posts")}
                 items(postList) { post->
                     PostItem(post)
-                    Divider()
+                    Divider(Modifier.padding(horizontal = 16.dp))
                 }
             }
         }
@@ -123,25 +127,74 @@ fun HomeFeatured(
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
+                modifier = modifier.padding(horizontal = 16.dp),
                 text = post.metadata.name,
                 style = MaterialTheme.typography.bodyMedium
             )
-            PostFeatureMetaData(post)
+            PostFeatureMetaData(post, modifier)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 @Composable
-fun PostFeatureMetaData(post: Post) {
-    post.metadata.date
-    post.metadata.readTimeMinutes
-    post.tag
+fun PostFeatureMetaData(
+    post: Post,
+    modifier: Modifier = Modifier
+) {
+    val text = buildAnnotatedString {
+        append(post.metadata.date)
+        append(" ")
+        append(post.metadata.readTimeMinutes.toString())
+        append(" ")
+        post.tag.forEach { tag->
+            append(tag)
+            append(" ")
+        }
+    }
+    
+    Text(
+        modifier = modifier.padding(horizontal = 16.dp),
+        text = text,
+        style = MaterialTheme.typography.bodyMedium
+    )
 
 
 }
 
 @Composable
-fun PostItem(post: Post) {
+fun PostItem(
+    post: Post,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
+        Image(
+            painter = painterResource(id = post.imageThumbId),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .width(60.dp)
+                .height(60.dp)
+                .padding(10.dp)
+        )
+        Column(modifier = modifier.padding(top = 10.dp)) {
+            Text(
+                text = post.title
+            )
+            val text = buildAnnotatedString {
+                append(post.metadata.date)
+                append(" ")
+                append(post.metadata.readTimeMinutes.toString())
+                append(" ")
+                post.tag.forEach { tag->
+                    append(tag)
+                    append(" ")
+                }
+            }
+            Text(text = text)
+        }
 
+    }
 }

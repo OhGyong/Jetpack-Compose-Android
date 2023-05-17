@@ -61,4 +61,4 @@ private val post3 = Post(
     tag = setOf("Migration", "Views")
 )
 
-private val postList: List<Post> = listOf(post1, post2, post3)
+private val postList: List<Post> = listOf(post1, post2, post3, post1.copy(), post2.copy(), post3.copy())
