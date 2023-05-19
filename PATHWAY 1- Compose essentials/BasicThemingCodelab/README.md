@@ -10,7 +10,7 @@ Jetpack Compose의 테마 설정 API를 사용하여 앱 요소들에 색상, �
 
 ---
 
-## Material Theming
+## 3. Material Theming
 Jetpack Compose는 디지털 인터페이스를 만들기 위한 포괄적인 디자인 시스템인 [Material Design](https://m2.material.io/design/introduction/)을 제공한다.
 [Material Design Components](https://m3.material.io/components)는 Material Design을 커스텀 할 수 있는
 [Material Theming](https://m2.material.io/design/material-theming/implementing-your-theme.html#using-material-theming)을
@@ -26,13 +26,90 @@ Material Design은 여러 색상을 정의한다.
 - `Background`<br>
 화면의 배경 색상으로 일반적으로 컨텐츠 영역을 둘러싼다.
 - `Surface`<br>
-Background와 대비하여 컨텐츠를 구분하며 컨테이너나 카드 등의  
+Background와 대비하여 컨텐츠를 구분하는 색상이다.
 
-또한 Material은 `on` 색상을 정의한다.
-이 색상은 이름이 지정된 색상 중 하나 위에 있는 콘텐츠에 사용된다.
-예를 들어 `background`로 배경 색상을 변경한다면, `on background`는 배경 위에 표시되는 다른 요소(텍스트 등)의 색을 변경한다.
+또한 `On Primary`, `On Secondary`, `On Background`, `On Surface`와 같이 Material은 `on` 색상을 정의한다.
+위에서 언급한 색상 위에 표시되는 텍스트나 아이콘 등의 컨텐츠에 사용되는 색상으로 대비를 주어 가시성을 높인다.
 
-## 
+### Typography
+테마별로 Typography 스타일을 변경할 수는 없지만 Material의 Typography를 사용하면 애플리케이션 내에서의 일관성을 높일 수 있다.
+
+### Shape
+Material은 Shape를 체계적으로 사용하여 브랜드를 전달할 수 있도록 지원한다.
+소형, 중형, 대형이라는 3가지 카테고리를 정의하고, 각각 모서리 스타일(둥글게 또는 자르기)과 크기를 맞춤설정 할 수 있다.
+
+---
+
+## 4. 테마 정의
+```kotlin
+@Composable
+fun MaterialTheme(
+    colors: Colors,
+    typography: Typography,
+    shapes: Shapes,
+    content: @Composable () -> Unit
+) { ...
+```
+`MaterialTheme` Composable은 Jetpack Compose에서 테마 설정을 구현하는 핵심 요소이다.
+MaterialTheme는 Compose 계층 구조에 배치하면 그 안의 모든 요소의 color, secondary, surface를 맞춤 설정할 수 있다.
+아래와 같이 MaterialTheme를 정의할 수 있다.
+
+<br>
+
+```kotlin
+@Composable
+fun JetnewsTheme(
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        content = content
+    )
+}
+```
+MaterialTheme를 래핑하는 자체 Composable을 만들면 여러 화면 또는 `@Preview` 등 여러 위치에서 쉽게 사용할 수 있게 된다.
+
+
+<br>
+
+```kotlin
+// Color.kt
+val Red700 = Color(0xffdd0d3c)
+val Red800 = Color(0xffd00036)
+val Red900 = Color(0xffc20029)
+```
+
+```kotlin
+// Theme.kt
+private val LightColors = lightColorScheme(
+    primary = Red700,
+    onPrimary = Color.White,
+    secondary = Red700,
+    onSecondary = Color.White,
+    error = Red800
+)
+
+@Composable
+fun JetnewsTheme(
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colorScheme = LightColors,
+        content = content
+    )
+}
+```
+대게 ui 패키지에 Color.kt, Theme.kt, Type.kt가 존재하고 테마, 색상, 스타일 등을 맞춤 설정한다.
+Color.kt나 Type.kt에서 정의한 내용을 Theme.kt로 불러와서 테마에 적용한다.
+
+lightColorScheme는 라이트 모드에 대한 색상 값을 포함하고 있다.
+> material3부터 기존의 lightColor이 없어지고 lightColorScheme가 생겼다.(darkColor도 마찬가지)
+
+
+
+
+
+
+
 
 ---
 
