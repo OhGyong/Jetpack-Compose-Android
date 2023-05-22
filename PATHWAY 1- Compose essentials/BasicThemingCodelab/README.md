@@ -164,6 +164,70 @@ fun JetnewsTheme(
 LightColors를 설정했을 때 처럼 다크 모드일 때 표현할 color를 정의하고
 `isSystemInDarkTheme()`를 사용하여 현재 다크 모드인지 확인하여 해당하는 color를 적용하면 된다.
 
+---
+
+## 5. 색상 사용
+위에서 자체 테마를 만들어서 앱의 color, typography, shape를 설정하는 방법을 배웠다.
+모든 Material Components는 기본적으로 이런 맞춤 설정을 사용하는데,
+Components 별로 매개변수에 다른 값을 지정하여 대체 색상을 설정할 수 있다.
+
+```kotlin
+Surface(color = Color.LightGray) {
+  Text(
+    text = "Use Color",
+    textColor = Color(0xffff00ff)
+  )
+}
+```
+Compose는 `Color` 클래스를 제공하며, 이를 `object` 등에 보관하여 사용할 수 있다.
+
+<br>
+
+```kotlin
+Surface(color = MaterialTheme.colors.primary)
+```
+더 유연한 접근 방법은 Theme에서 색상을 가져오는 것이다.
+위 코드에서는 color 속성을 MaterialThme에 설정된 color 값을 사용한다.
+앱의 디자인과 분위기에 맞는 color를 사용할 수 있는 것이락 볼 수 있다.
+
+<br>
+
+```kotlin
+val derivedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+```
+또한 `copy` 메서드를 이용하면 하드 코딩하지 않고 컬러 정보를 얻을 수 있으며,
+`alpha` 속성을 부여하여 투명도를 적용할 수 있다.
+
+### Surface와 contentColor
+```kotlin
+Surface(
+  color: Color = MaterialTheme.colors.surface,
+  contentColor: Color = contentColorFor(color),
+  // ...
+
+TopAppBar(
+  backgroundColor: Color = MaterialTheme.colors.primarySurface,
+  contentColor: Color = contentColorFor(backgroundColor),
+  // ...
+```
+Composable은 한 쌍의 color와 contentColor를 지원한다.
+Composable의 컬러는 color로 설정하고 그 안의 컨텐츠는(Text, Icon 등) contentColor를 사용한다.
+`contenteColorFor` 메서드는 지정한 색상에 적절한 `on` 색상을 가져온다.
+
+요소의 색상을 설정할 때는 `Surface`를 사용하는 것이 좋다.
+적절한 컨텐츠 색상인 `CompositionLocal` 값을 설정하기 때문이다.
+> CompositonLocal 뿐만 아니라 LocalContentColor도 현재 배경과 대비되는 색상을 가져온다.
+
+### ContentAlpha
+중요도를 전달하고 시각적 계층 구조를 제공하기 위해서 컨텐츠를 강조하는 경우가 있다.
+Material Design에서는 다양한 수준의 불투명도를 사용하여 다양한 중요도 수준을 전달하도록 한다.
+
+Jetpack Compose에서는 `LocalContentAlpha`를 사용하여 이를 구현할 수 있다.
+`CompositionLocal` 값을 제공하여 계층 구조의 ContentAlpha를 지정할 수 있다.
+Material에서는 ContentAlpha 객체에 의해 모델링된 일부 표준 값으로 high, medium, disabled이 있다.
+> MeterialTheme는 LocalContentAlpha의 기본값을 ConentAlpha.high으로 한다.
+
+
 
 ---
 

@@ -86,10 +86,12 @@ fun HomeSection(
     modifier: Modifier = Modifier
 ) {
     Surface (
-        modifier = modifier
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+        contentColor = MaterialTheme.colorScheme.primary
     ) {
         Text(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             text = sectionString,
@@ -152,11 +154,11 @@ fun PostFeatureMetaData(
             append(" ")
         }
     }
-    
+
     Text(
         modifier = modifier.padding(horizontal = 16.dp),
         text = text,
-        style = MaterialTheme.typography.bodyMedium
+        style = MaterialTheme.typography.bodySmall
     )
 
 
