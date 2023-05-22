@@ -68,9 +68,7 @@ fun JetnewsTheme(
 ```
 MaterialTheme를 래핑하는 자체 Composable을 만들면 여러 화면 또는 `@Preview` 등 여러 위치에서 쉽게 사용할 수 있게 된다.
 
-
-<br>
-
+### Color
 ```kotlin
 // Color.kt
 val Red700 = Color(0xffdd0d3c)
@@ -87,28 +85,84 @@ private val LightColors = lightColorScheme(
     onSecondary = Color.White,
     error = Red800
 )
-
-@Composable
-fun JetnewsTheme(
-    content: @Composable () -> Unit
-) {
-    MaterialTheme(
-        colorScheme = LightColors,
-        content = content
-    )
-}
 ```
-대게 ui 패키지에 Color.kt, Theme.kt, Type.kt가 존재하고 테마, 색상, 스타일 등을 맞춤 설정한다.
+대게 theme 패키지에 Color.kt, Theme.kt, Type.kt가 존재하고 테마, 색상, 스타일 등을 맞춤 설정한다.
 Color.kt나 Type.kt에서 정의한 내용을 Theme.kt로 불러와서 테마에 적용한다.
 
 lightColorScheme는 라이트 모드에 대한 색상 값을 포함하고 있다.
 > material3부터 기존의 lightColor이 없어지고 lightColorScheme가 생겼다.(darkColor도 마찬가지)
 
+### Typography
+Material3로 업데이트되면서 기존 Material에서 제공하는 Typography 클래스에 비해 직관성을 높였다.
+기존에는 h1, body1과 같은 이름을 썼다면 Material3에서는 bodyLarge, titleLarge와 같은 이름을 사용한다.
 
+```kotlin
+// 기존 Material
+val JetnewsTypography = Typography(
+    h4 = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.W600,
+        fontSize = 30.sp
+    ),
+    h5 = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.W600,
+        fontSize = 24.sp
+    ),
+    // ...
+)
 
+// Material3
+val Typography = Typography(
+    bodyLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    ),
+    // ...
+)
+```
+Type.kt 또는 Typography.kt에 스타일을 정의하여 Theme에 적용할 수 있다.
 
+### Shape
+```kotlin
+val JetnewsShapes = Shapes(
+    small = CutCornerShape(topStart = 8.dp),
+    medium = CutCornerShape(topStart = 24.dp),
+    large = RoundedCornerShape(8.dp)
+)
+```
+Compose는 도형 테마를 정의하는 데 사용할 수 있는 `RoundedCornerShape` 및 `CutCornerShape` 클래스를 제공한다.
+theme 패키지에 Shape.kt 파일을 만들고 위 코드처럼 도형을 정의한다.
 
+### DarkTheme
+DarkTheme일 때 맞춤 Theme를 설정하는 방법은 현재 기기가 다크 모드인지만 확인하면 된다.
 
+```kotlin
+@Composable
+fun JetnewsTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colorScheme = if(darkTheme) DarkColors else LightColors,
+        content = content,
+        typography = JetnewsTypography,
+        shapes = JetnewsShapes
+    )
+}
+```
+LightColors를 설정했을 때 처럼 다크 모드일 때 표현할 color를 정의하고
+`isSystemInDarkTheme()`를 사용하여 현재 다크 모드인지 확인하여 해당하는 color를 적용하면 된다.
 
 
 ---
