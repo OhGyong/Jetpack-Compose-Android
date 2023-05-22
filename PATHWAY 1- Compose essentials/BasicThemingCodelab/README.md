@@ -225,9 +225,36 @@ Material Design에서는 다양한 수준의 불투명도를 사용하여 다양
 Jetpack Compose에서는 `LocalContentAlpha`를 사용하여 이를 구현할 수 있다.
 `CompositionLocal` 값을 제공하여 계층 구조의 ContentAlpha를 지정할 수 있다.
 Material에서는 ContentAlpha 객체에 의해 모델링된 일부 표준 값으로 high, medium, disabled이 있다.
-> MeterialTheme는 LocalContentAlpha의 기본값을 ConentAlpha.high으로 한다.
+> 참고로 MeterialTheme는 LocalContentAlpha의 기본값을 ConentAlpha.high으로 한다.
 
+<br>
 
+그런데 기존 Material에서 Material3로 넘어가면서 ContentAlpha와 LocalContentAlpha는 없어졌다.
+대신 fontWeight에 값을 적용하는 것으로 대체한다.
+```kotlin
+// 기존 Material
+CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+    Text(...)
+}
+CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
+    Icon(...)
+    Text(...)
+}
+```
+
+```kotlin
+// Material3
+Text(
+    modifier = modifier.padding(horizontal = 16.dp),
+    text = text,
+    style = MaterialTheme.typography.bodySmall,
+    fontWeight = FontWeight.Normal
+)
+```
+기존 Material의 ContentAlpha 값은 Material3에서 아래 처럼 대체된다.
+- ContentAlpha.high -> FontWeight.Medium 또는 FontWeight.Black
+- ContentAlpha.medium -> FontWeight.Thin 또는 FontWeight.Normal
+- ContentAlpha.disabled -> onSurface.copy(alpha = 0.38f)
 
 ---
 
