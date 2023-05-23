@@ -256,6 +256,31 @@ Text(
 - ContentAlpha.medium -> FontWeight.Thin 또는 FontWeight.Normal
 - ContentAlpha.disabled -> onSurface.copy(alpha = 0.38f)
 
+### TopAppBar
+Material3에서는 기존의 backgroundColor가 사라지고 TopAppBarColors가 생겼다.([참고](https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#TopAppBar(kotlin.Function0,androidx.compose.ui.Modifier,kotlin.Function0,kotlin.Function1,androidx.compose.foundation.layout.WindowInsets,androidx.compose.material3.TopAppBarColors,androidx.compose.material3.TopAppBarScrollBehavior)))
+```kotlin
+@Composable
+fun Appbar() {
+    TopAppBar(
+        navigationIcon = {
+            Icon(
+                imageVector = Icons.Rounded.Home,
+                contentDescription = null,
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+        },
+        title = {
+            Text(text = stringResource(id = R.string.app_name))
+        },
+        colors = TopAppBarDefaults.largeTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background
+        )
+    )
+}
+```
+`largeTopAppBarColors`는 TopAppBar의 크기가 큰 경우의 색상으로 네비게이션 아이콘 또는 액션 아이콘 등이 있을 때 적합하다.
+
+
 ---
 
 <img width="470" alt="스크린샷 2023-05-17 오후 2 15 42" src="https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/ca0ae7ff-904a-4d50-9663-bf54ef6903fb">
