@@ -398,5 +398,12 @@ Image(
 `CutCornerShape`로 요소의 일부를 잘라내고 clip의 shape에 적용한다.
 
 ---
-
+수정 전
 <img width="470" alt="스크린샷 2023-05-17 오후 2 15 42" src="https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/ca0ae7ff-904a-4d50-9663-bf54ef6903fb">
+
+<br>
+
+수정 후
+
+![light_theming](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/eb5070c1-de7a-4704-99af-cb39da088319)
+![dark_theming](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/0dfdfb47-6fe6-433e-ae43-5b0c0789f012)
