@@ -34,11 +34,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.toUpperCase
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.study.basicthemingcodelab.data.Post
 import com.study.basicthemingcodelab.data.PostRepo
+import java.util.Locale
 
 @Composable
 fun Home() {
@@ -46,7 +50,7 @@ fun Home() {
     val postList = remember {PostRepo.getPostList()}
     MaterialTheme {
         Scaffold(
-            topBar = {Appbar()}
+            topBar = {AppBar()}
         ) { paddingValues ->
             LazyColumn(contentPadding = paddingValues) {
                 item {HomeSection("Top Story")}
@@ -62,7 +66,7 @@ fun Home() {
 }
 
 @Composable
-fun Appbar() {
+fun AppBar() {
     TopAppBar(
         navigationIcon = {
             Icon(
@@ -72,7 +76,10 @@ fun Appbar() {
             )
         },
         title = {
-            Text(text = stringResource(id = R.string.app_name))
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = MaterialTheme.typography.titleMedium
+            )
         },
         colors = TopAppBarDefaults.largeTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background
@@ -126,12 +133,12 @@ fun HomeFeatured(
             Text(
                 modifier = modifier.padding(horizontal = 16.dp),
                 text = post.title,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.titleSmall
             )
             Text(
                 modifier = modifier.padding(horizontal = 16.dp),
                 text = post.metadata.name,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyLarge
             )
             PostFeatureMetaData(post, modifier)
             Spacer(modifier = Modifier.height(16.dp))
@@ -144,22 +151,26 @@ fun PostFeatureMetaData(
     post: Post,
     modifier: Modifier = Modifier
 ) {
+    val tagStyle = TextStyle(
+        background = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+    ).toSpanStyle()
+
     val text = buildAnnotatedString {
         append(post.metadata.date)
-        append(" ")
-        append(post.metadata.readTimeMinutes.toString())
-        append(" ")
+        append(" • ")
+        append("${post.metadata.readTimeMinutes}min")
+        append(" • ")
         post.tag.forEach { tag->
-            append(tag)
+            withStyle(tagStyle) {
+                append(" ${tag.uppercase(Locale.ROOT)} ")
+            }
             append(" ")
         }
     }
-
-
     Text(
         modifier = modifier.padding(horizontal = 16.dp),
         text = text,
-        style = MaterialTheme.typography.bodySmall,
+        style = MaterialTheme.typography.bodyMedium,
         fontWeight = FontWeight.Thin
     )
 }
@@ -183,7 +194,8 @@ fun PostItem(
         )
         Column(modifier = modifier.padding(top = 10.dp)) {
             Text(
-                text = post.title
+                text = post.title,
+                style = MaterialTheme.typography.bodyMedium
             )
             val text = buildAnnotatedString {
                 append(post.metadata.date)
@@ -195,7 +207,10 @@ fun PostItem(
                     append(" ")
                 }
             }
-            Text(text = text)
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }

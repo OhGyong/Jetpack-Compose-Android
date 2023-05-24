@@ -32,7 +32,7 @@ private val post1 = Post(
         date = "August 02",
         readTimeMinutes = 1
     ),
-    tag = setOf("Jetpack Compose", "Composable")
+    tag = setOf("Compose", "Composable")
 )
 
 private val post2 = Post(

@@ -28,14 +28,14 @@ val JetnewsTypography = Typography(
     ),
     titleMedium = TextStyle(
         fontFamily = Montserrat,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.W600,
         fontSize = 20.sp,
         lineHeight = 30.sp,
         letterSpacing = 0.sp
     ),
     titleSmall = TextStyle(
         fontFamily = Montserrat,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.W600,
         fontSize = 18.sp,
         letterSpacing = 0.sp
     ),

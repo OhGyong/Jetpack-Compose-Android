@@ -216,7 +216,7 @@ Composable의 컬러는 color로 설정하고 그 안의 컨텐츠는(Text, Icon
 
 요소의 색상을 설정할 때는 `Surface`를 사용하는 것이 좋다.
 적절한 컨텐츠 색상인 `CompositionLocal` 값을 설정하기 때문이다.
-> CompositonLocal 뿐만 아니라 LocalContentColor도 현재 배경과 대비되는 색상을 가져온다.
+> CompositionLocal 뿐만 아니라 LocalContentColor도 현재 배경과 대비되는 색상을 가져온다.
 
 ### ContentAlpha
 중요도를 전달하고 시각적 계층 구조를 제공하기 위해서 컨텐츠를 강조하는 경우가 있다.
@@ -260,7 +260,7 @@ Text(
 Material3에서는 기존의 backgroundColor가 사라지고 TopAppBarColors가 생겼다.([참고](https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#TopAppBar(kotlin.Function0,androidx.compose.ui.Modifier,kotlin.Function0,kotlin.Function1,androidx.compose.foundation.layout.WindowInsets,androidx.compose.material3.TopAppBarColors,androidx.compose.material3.TopAppBarScrollBehavior)))
 ```kotlin
 @Composable
-fun Appbar() {
+fun AppBar() {
     TopAppBar(
         navigationIcon = {
             Icon(
@@ -279,6 +279,90 @@ fun Appbar() {
 }
 ```
 `largeTopAppBarColors`는 TopAppBar의 크기가 큰 경우의 색상으로 네비게이션 아이콘 또는 액션 아이콘 등이 있을 때 적합하다.
+
+---
+
+## 5. 텍스트 사용
+단순 글을 보여줄 때는 `Text` Composable을 사용하고 `TextField` 또는 `OutlinedTextField`를 텍스트 입력에 사용한다.
+`TextStyle`을 사용해서 텍스트에 단일 스타일을 적용할 수 있으며 `AnnotatedString`을 사용하여 텍스트에 여러 스타일을 적용할 수 있다.
+
+<br>
+
+```kotlin
+@Composable
+fun Button(
+    // many other parameters
+    content: @Composable RowScope.() -> Unit
+) {
+  ...
+  ProvideTextStyle(MaterialTheme.typography.button) { //set the "current" text style
+    ...
+    content()
+  }
+}
+
+@Composable
+fun Text(
+    // many, many parameters
+    style: TextStyle = LocalTextStyle.current // get the value set by ProvideTextStyle
+) { ...
+```
+`ProvideITextStyle` Composable을(CompositionLocal) 사용하여 현재 TextStyle을 설정할 수 있으며,
+자식 Composable에게 텍스트 스타일을 제공할 수 있다.
+그리고 `LocalTextStyle.current`를 통해 ProvideTextStyle로 설정한 현재 TextStyle을 사용할 수 있다.
+
+### 테마의 텍스트 스타일
+color와 마찬가지로 애플리케이션에 일관되면서도 유지 관리를 위해 현재 테마에서 TextStyle을 가져와 쓰는 것이 가장 좋다.
+MaterialTheme의 typography를 통해 개발자가 정의한 스타일을 적용하여 사용하면 된다.
+
+```kotlin
+Text(
+    text = "Hello World",
+    style = MaterialTheme.typography.body1.copy(
+        background = MaterialTheme.colors.secondary
+    ),
+    fontSize = 22.sp // explicit size overrides the size in the style
+)
+```
+만약 맞춤 설정이 필요하면 `copy`를 통해 속성을 재정의하거나 스타일 지정 매개변수를(font) 사용한다.
+
+### AnnotatedString
+일부 텍스트에 여러 스타일을 적용해야 하는 경우 마크업을 적용하는 `AnnotatedString` 클래스를 사용한다.
+AnnotatedString을 사용하면 `SpanStyle`을 텍스트 범위에 추가할 수 있다.
+
+```kotlin
+val tagStyle = MaterialTheme.typography.overline.toSpanStyle().copy(
+   background = MaterialTheme.colors.primary.copy(alpha = 0.1f)
+)
+```
+기존 Material에서는 overline 속성을 사용할 수 있었으나 Material3 부터는 overline을 지원하지 않는다.
+따라서 아래와 같이 작성해야 한다.
+```kotlin
+val tagStyle = TextStyle(
+    background = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+).toSpanStyle()
+```
+
+<br>
+
+```kotlin
+val text = buildAnnotatedString {
+    append(post.metadata.date)
+    append(" • ")
+    append("${post.metadata.readTimeMinutes}min")
+    append(" • ")
+    post.tag.forEach { tag->
+        withStyle(tagStyle) {
+            append(" ${tag.uppercase(Locale.ROOT)} ")
+        }
+        append(" ")
+    }
+}
+```
+`buildAnnotatedString`로 텍스트에 여러 개의 스타일을 혼합하는 등의 작업을 수행할 수 있다.
+buildAnnotatedString 블록에 `append`를 사용하여 텍스트를 추가하고 `withStyle`을 통해
+원하는 텍스트에 스타일을 적용할 수 있다.
+
 
 
 ---
