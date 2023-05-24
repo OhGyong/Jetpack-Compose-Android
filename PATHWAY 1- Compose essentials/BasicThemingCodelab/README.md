@@ -282,7 +282,7 @@ fun AppBar() {
 
 ---
 
-## 5. 텍스트 사용
+## 6. 텍스트 사용
 단순 글을 보여줄 때는 `Text` Composable을 사용하고 `TextField` 또는 `OutlinedTextField`를 텍스트 입력에 사용한다.
 `TextStyle`을 사용해서 텍스트에 단일 스타일을 적용할 수 있으며 `AnnotatedString`을 사용하여 텍스트에 여러 스타일을 적용할 수 있다.
 
@@ -362,8 +362,6 @@ val text = buildAnnotatedString {
 `buildAnnotatedString`로 텍스트에 여러 개의 스타일을 혼합하는 등의 작업을 수행할 수 있다.
 buildAnnotatedString 블록에 `append`를 사용하여 텍스트를 추가하고 `withStyle`을 통해
 원하는 텍스트에 스타일을 적용할 수 있다.
-
-
 
 ---
 
