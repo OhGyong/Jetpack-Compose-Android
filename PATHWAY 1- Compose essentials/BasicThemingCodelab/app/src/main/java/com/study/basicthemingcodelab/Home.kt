@@ -57,10 +57,12 @@ fun Home() {
                 item {HomeSection("Top Story")}
                 item {HomeFeatured(postFeature)}
                 item {HomeSection("Posts")}
+                item { Surface(modifier = Modifier.padding(top = 16.dp)){} }
                 items(postList) { post->
                     PostItem(post)
                     Divider(Modifier.padding(horizontal = 16.dp))
                 }
+                item { Surface(modifier = Modifier.padding(bottom = 16.dp)){} }
             }
         }
     }
@@ -114,7 +116,7 @@ fun HomeFeatured(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier.padding(16.dp),
         border = BorderStroke(width = 0.1.dp, color = Color.Gray)
     ) {
         Column(
