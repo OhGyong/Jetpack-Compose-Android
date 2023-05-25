@@ -3,7 +3,7 @@
 
 ---
 
-## 1. Jetpack Compose starter tutorial
+## 1. Starter tutorial
 Jetpack Compose는 기본 Android UI를 빌드하기 위한 최신 도구 키트이다.
 더 적은 코드, 제공되는 다양한 툴, 코틀린으로 통합된 직관성과 API로 안드로이드에서 UI 개발을 간소화하고 가속화한다.
 <br/>
@@ -188,7 +188,7 @@ Compose에서는 새 데이터를 사용하여 구성 가능한 함수를 다시
 
 ---
 
-## 5. Basic layouts in Compose
+## 5. Implement a real-world design
 [BasicLayouts Codelab](https://github.com/OhGyong/Jetpack-Compose-Android/tree/main/PATHWAY%201-%20Compose%20essentials/BasicLayoutsCodelab)
 - Modifier를 사용하여 Composable을 채우는 법
 - Column 및 LazyRow와 같은 표준 레이아웃 Compose 요소로 하위 Composable을 배치하는 방법
@@ -200,7 +200,7 @@ Compose에서는 새 데이터를 사용하여 구성 가능한 함수를 다시
 
 ---
 
-## 6. State in Jetpack Compose
+## 6. Get started with state
 [BasicState Codelab](https://github.com/OhGyong/Jetpack-Compose-Android/tree/main/PATHWAY%201-%20Compose%20essentials/BasicStateCodelab)
 - Jetpack Compose UI에서 State와 Event를 고려하고 사용하는 방법
 - State hoisting의 개념과 Stateful/Stateless에 대해
@@ -210,3 +210,18 @@ Compose에서는 새 데이터를 사용하여 구성 가능한 함수를 다시
 - Compose와 ViewModel을 사용하는 방법
 
 ![ezgif com-gif-maker](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/89d05423-0825-4107-976f-f74de6788b2f)
+
+---
+
+## 7. Learning about the theme
+[BasicTheming Codelab](https://github.com/OhGyong/Jetpack-Compose-Android/tree/main/PATHWAY%201-%20Compose%20essentials/BasicThemingCodelab)
+- Material Design 기본 지침서 및 브랜드에 맞게 맞춤설정 하는 방법
+- Compose에서 Material Design 시스템을 구현하는 방법
+- 앱 전체에 color, typography, shpae를 정의하고 사용하는 방법
+- Compose 요소의 스타일을 지정하는 방법
+- light/dark 테마를 지원하는 방법
+  
+![light_theming](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/eb5070c1-de7a-4704-99af-cb39da088319)
+
+---
+
