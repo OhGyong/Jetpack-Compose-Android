@@ -71,7 +71,7 @@ fun PlantDetailDescription(plantDetailViewModel: PlantDetailViewModel) {
 @Composable
 fun PlantDetailContent(plant: Plant) {
     Surface {
-        Column(Modifier.padding(dimensionResource(id = R.dimen.margin_normal))) {
+        Column(Modifier.padding(horizontal = dimensionResource(id = R.dimen.margin_normal))) {
             PlantImage(uri = plant.imageUrl)
             PlantName(name = plant.name)
             PlantWatering(wateringInterval = plant.wateringInterval)
