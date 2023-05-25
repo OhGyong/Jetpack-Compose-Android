@@ -225,3 +225,13 @@ Compose에서는 새 데이터를 사용하여 구성 가능한 함수를 다시
 
 ---
 
+## 8. Hands-on migration
+[Migration Codelab](https://github.com/OhGyong/Jetpack-Compose-Android/tree/main/PATHWAY%201-%20Compose%20essentials/MigrationCodelab)
+- 앱을 Compose로 이전하는 방법
+- View에 Compose를 추가하는 방법
+- ViewModel과 LiveData를 사용하는 방법
+- Compose에서 Html 문자열을 렌더링하는 방법
+- ViewCompositionStrategy 사용 방법
+- View와 Compose가 혼합된 화면을 테스트하는 방법
+
+<img width="455" alt="image" src="https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/7066a926-59e9-4126-937a-9ca95ff4c944">
