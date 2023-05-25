@@ -14,7 +14,7 @@
 ---
 
 ## 4. Theme your app with Material Design
-[BasicTheming Codelab](https://github.com/OhGyong/Jetpack-Compose-Android/tree/main/PATHWAY%201-%20Compose%20essentials/BasicThemingCodelab)
+[BasicTheming Codelab](https://github.com/OhGyong/Jetpack-Compose-Android/tree/main/PATHWAY%202-%20Layouts%2C%20theming%2C%20and%20animation/BasicThemingCodelab)
 - Material Design 기본 지침서 및 브랜드에 맞게 맞춤설정 하는 방법
 - Compose에서 Material Design 시스템을 구현하는 방법
 - 앱 전체에 color, typography, shpae를 정의하고 사용하는 방법
