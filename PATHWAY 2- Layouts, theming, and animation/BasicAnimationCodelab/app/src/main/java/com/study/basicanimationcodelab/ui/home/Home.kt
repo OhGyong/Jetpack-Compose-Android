@@ -2,12 +2,14 @@
 
 package com.study.basicanimationcodelab.ui.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,6 +32,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -58,6 +62,7 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -166,8 +171,67 @@ fun Home() {
                     }
                 }
             }
+            item { Spacer(modifier = Modifier.height(32.dp))}
+
+            // Topics
+            item { HomeHeader(title = stringResource(id = R.string.topics)) }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            items(allTopics) { topic ->
+                TopicRow(
+                    topic = topic,
+                    expanded = expandedTopic == topic,
+                    onClick = {
+                        expandedTopic = if(expandedTopic == topic) null else topic
+                    }
+                )
+            }
         }
     }
+}
+
+@Composable
+fun TopicRowSpacer(visible: Boolean) {
+    // todo : AnimatedVisibility?
+    AnimatedVisibility(visible = visible) {
+        Spacer(modifier = Modifier.height(8.dp))
+    }
+}
+
+@Composable
+fun TopicRow(topic: String, expanded: Boolean, onClick: () -> Unit) {
+    TopicRowSpacer(visible = expanded)
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shadowElevation = 2.dp,
+        onClick = onClick
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = topic,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            if(expanded) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(id = R.string.lorem_ipsum),
+                    textAlign = TextAlign.Justify
+                )
+            }
+        }
+    }
+    TopicRowSpacer(visible = expanded)
 }
 
 @Composable
