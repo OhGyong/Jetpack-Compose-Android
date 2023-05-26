@@ -3,24 +3,43 @@
 package com.study.basicanimationcodelab.ui.home
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -32,10 +51,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.study.basicanimationcodelab.R
+import com.study.basicanimationcodelab.ui.theme.Amber600
+import com.study.basicanimationcodelab.ui.theme.BasicAnimationCodelabTheme
 import com.study.basicanimationcodelab.ui.theme.Green300
 import com.study.basicanimationcodelab.ui.theme.Green800
 import com.study.basicanimationcodelab.ui.theme.Purple100
@@ -49,8 +77,9 @@ private enum class TabPage {
 
 @Composable
 fun Home() {
+    // todo : tap을 클릭할 때마다 Composition이 발생하는지
     val allTasks = stringArrayResource(id = R.array.tasks)
-    val allTopics = stringArrayResource(id = R.array.topics)
+    val allTopics = stringArrayResource(id = R.array.topics).toList()
 
     var tabPage by remember { mutableStateOf(TabPage.Home) }
     var weatherLoading by remember { mutableStateOf(false) }
@@ -60,21 +89,22 @@ fun Home() {
     var editMessageShown by remember { mutableStateOf(false) }
 
     suspend fun loadWeather() {
-        if(!editMessageShown) {
-            editMessageShown = true
-            delay(3000L)
-            editMessageShown = false
+        if(!weatherLoading) {
+            weatherLoading = true
+            delay(2000L)
+            weatherLoading = false
         }
     }
 
     suspend fun showEditMessage() {
         if (!editMessageShown) {
             editMessageShown = true
-            delay(3000L)
+            delay(2000L)
             editMessageShown = false
         }
     }
 
+    // todo : LaunchedEffect에 대해서
     LaunchedEffect(Unit) {
         loadWeather()
     }
@@ -83,8 +113,11 @@ fun Home() {
 
     // todo : 1
     val backgroundColor =  if(tabPage == TabPage.Home) Purple100 else Green300
+    println(backgroundColor)
 
+    // todo : rememberCoroutineScope에 대해서
     val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             HomeTabBar(
@@ -94,8 +127,10 @@ fun Home() {
             )
         },
         containerColor = backgroundColor,
+        // todo : floatingActionButton?
         floatingActionButton = {
             HomeFloatingActionButton(
+                // todo : isScrollingUp를 override 한 것도 아니고 뭐지
                 extended = lazyListState.isScrollingUp(),
                 onClick = {
                     coroutineScope.launch {
@@ -110,26 +145,109 @@ fun Home() {
             state = lazyListState,
             modifier = Modifier.padding(paddingValues)
         ) {
-
+            // Weather
+            item { HomeHeader(title = stringResource(id = R.string.weather)) }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            item {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shadowElevation = 2.dp
+                ) {
+                    if(weatherLoading) {
+                        LoadingRow()
+                    } else {
+                        WeatherRow(
+                            onRefresh = {
+                                coroutineScope.launch {
+                                    loadWeather()
+                                }
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
+@Composable
+fun WeatherRow(onRefresh: () -> Unit ) {
+    Row(
+        modifier = Modifier
+            .heightIn(min = 64.dp)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(Amber600)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(text = stringResource(id = R.string.temperature), fontSize = 24.sp)
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(onClick = onRefresh) {
+            Icon(
+                imageVector = Icons.Default.Refresh,
+                contentDescription = stringResource(id = R.string.refresh)
+            )
+        }
 
-
+    }
+}
 
 @Composable
+fun LoadingRow() {
+    val alpha = 1f
+    Row(
+        modifier = Modifier
+            .heightIn(min = 64.dp)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(Color.LightGray.copy(alpha = alpha))
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(32.dp)
+                .background(Color.LightGray.copy(alpha = alpha))
+        )
+    }
+}
+
+@Composable
+fun HomeHeader(title: String) {
+    Text(
+        text = title,
+        // todo : semantics? heading?
+        modifier = Modifier.semantics { heading() },
+        style = MaterialTheme.typography.headlineSmall
+    )
+}
+
+
+/**
+ * LazyListState의 확장 함수로 isScrollingUp을 정의
+ */
+@Composable
+// todo : LazyListState?
 private fun LazyListState.isScrollingUp(): Boolean {
-    /**
-     * todo
-     * 1. remember의 매개변수에 this를 전달하는 이유
-     * 2. firstVisibleItemIndex?
-     * 3. firstVisibleItemScrollOffset?
-     * 4. derivedStateOf?
-     */
+    // todo : remember에 this 전달 이유
+    // todo : firstVisibleItemIndex
+    // todo : firstVisibleItemScrollOffset?
     var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
+    println("previousIndex  $previousIndex")
     var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset)}
+    println("previousScrollOffset  $previousScrollOffset")
     return remember(this) {
+        // todo : derivedStateOf?
         derivedStateOf {
             if(previousIndex != firstVisibleItemIndex) {
                 previousIndex > firstVisibleItemIndex
@@ -148,8 +266,23 @@ fun HomeFloatingActionButton(
     extended: Boolean,
     onClick: () -> Unit
 ) {
+    // todo : FloatingActionButton?
     FloatingActionButton(onClick = onClick) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = null
+            )
 
+            if(extended) {
+                Text(
+                    text = stringResource(id = R.string.edit),
+                    modifier = Modifier.padding(start = 8.dp, top = 3.dp)
+                )
+            }
+        }
     }
 }
 
@@ -159,14 +292,49 @@ private fun HomeTabBar(
     tabPage: TabPage,
     onTabSelected: (tabPage: TabPage) -> Unit
 ) {
+    // todo : TabRow에 대해서
     TabRow(
+        // todo : ordinal?
         selectedTabIndex = tabPage.ordinal,
         containerColor = backgroundColor,
         indicator = { tabPositions ->
             HomeTabIndicator(tabPositions, tabPage)
         }
     ) {
+        HomeTab(
+            icon = Icons.Default.Home,
+            title = stringResource(R.string.home),
+            onClick = { onTabSelected(TabPage.Home) }
+        )
+        HomeTab(
+            icon = Icons.Default.AccountBox,
+            title = stringResource(R.string.work),
+            onClick = { onTabSelected(TabPage.Work) }
+        )
+    }
+}
 
+@Composable
+private fun HomeTab(
+    icon: ImageVector,
+    title: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    // todo : Modifier에 clickable을 적용
+    Row(
+        modifier = modifier
+            .clickable(onClick = onClick)
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(text = title)
     }
 }
 
@@ -175,7 +343,7 @@ private fun HomeTabIndicator(
     tabPositions: List<TabPosition>,
     tabPage: TabPage
 ) {
-    // todo 4
+    // todo 4 : 로직 확인
     val indicatorLeft = tabPositions[tabPage.ordinal].left
     val indicatorRight = tabPositions[tabPage.ordinal].right
     val color = if(tabPage == TabPage.Home) Purple700 else Green800
@@ -190,5 +358,13 @@ private fun HomeTabIndicator(
                 BorderStroke(2.dp, color),
                 RoundedCornerShape(4.dp)
             )
+    }
+}
+
+@Preview
+@Composable
+fun HomePreview() {
+    BasicAnimationCodelabTheme {
+        Home()
     }
 }
