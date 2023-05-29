@@ -30,6 +30,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
@@ -44,10 +45,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -88,6 +91,8 @@ fun Home() {
 
     var tabPage by remember { mutableStateOf(TabPage.Home) }
     var weatherLoading by remember { mutableStateOf(false) }
+
+    // todo : tasks와 topics의 리스트화 하는 방식 알기
     val tasks = remember { mutableStateListOf(*allTasks) } // 리스트로 받아야 해서
 
     var expandedTopic by remember { mutableStateOf<String?>(null) }
@@ -185,6 +190,62 @@ fun Home() {
                     }
                 )
             }
+            item { Spacer(modifier = Modifier.height(32.dp))}
+
+            // Tasks
+            item { HomeHeader(title = stringResource(id = R.string.tasks))}
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            if(tasks.isEmpty()) {
+                item {
+                    TextButton(onClick = {
+                        tasks.clear()
+                        tasks.addAll(allTasks)
+                    }) {
+                        Text(stringResource(id = R.string.add_tasks))
+                    }
+                }
+            }
+            // todo : items의 count 사용
+            items(count = tasks.size) {
+                // todo : getOrNull?
+                val task = tasks.getOrNull(it)
+                if(task != null) {
+                    // todo : key?
+                    key(task) {
+                        TaskRow(
+                            task = task,
+                            onRemove = {tasks.remove(task)}
+                        )
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+@Composable
+fun TaskRow(task: String, onRemove: () -> Boolean) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth(),
+        // todo : swipeToDismiss 확인 필요
+        shadowElevation = 2.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(
+                text = task,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }
@@ -197,6 +258,7 @@ fun TopicRowSpacer(visible: Boolean) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopicRow(topic: String, expanded: Boolean, onClick: () -> Unit) {
     TopicRowSpacer(visible = expanded)
