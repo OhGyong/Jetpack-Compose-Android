@@ -123,7 +123,6 @@ fun Home() {
 
     // todo : 1
     val backgroundColor =  if(tabPage == TabPage.Home) Purple100 else Green300
-    println(backgroundColor)
 
     // todo : rememberCoroutineScope에 대해서
     val coroutineScope = rememberCoroutineScope()
@@ -219,7 +218,25 @@ fun Home() {
                     }
                 }
             }
+        }
+        EditMessage(editMessageShown)
+    }
+}
 
+@Composable
+fun EditMessage(shown: Boolean) {
+    AnimatedVisibility(
+        visible = shown
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.secondary,
+            shadowElevation = 4.dp
+        ) {
+            Text(
+                text = stringResource(id = R.string.edit_message),
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }
@@ -393,7 +410,12 @@ fun HomeFloatingActionButton(
     onClick: () -> Unit
 ) {
     // todo : FloatingActionButton?
-    FloatingActionButton(onClick = onClick) {
+    FloatingActionButton(
+        onClick = onClick,
+        containerColor = MaterialTheme.colorScheme.secondary,
+        contentColor = Color.Black
+
+    ) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
