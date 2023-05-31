@@ -109,7 +109,7 @@ fun Home() {
     suspend fun showEditMessage() {
         if (!editMessageShown) {
             editMessageShown = true
-            delay(2000L)
+            delay(3000L)
             editMessageShown = false
         }
     }
@@ -128,6 +128,7 @@ fun Home() {
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
+        modifier = Modifier.height(30.dp),
         topBar = {
             HomeTabBar(
                 backgroundColor = backgroundColor,
@@ -226,7 +227,7 @@ fun Home() {
 @Composable
 fun EditMessage(shown: Boolean) {
     AnimatedVisibility(
-        visible = shown
+        visible = shown,
     ) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
