@@ -1,0 +1,2 @@
+# [Animating element in Jetpack Compose](https://developer.android.com/codelabs/jetpack-compose-animation?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fjetpack-compose-for-android-developers-2%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fjetpack-compose-animation#0)
+이 프로젝트는 android-compose-codelabs의 [AnimationCodelab](https://github.com/googlecodelabs/android-compose-codelabs/tree/main/AnimationCodelab) 프로젝트를 바탕으로 Codelab에 맞춰 진행하였습니다.
