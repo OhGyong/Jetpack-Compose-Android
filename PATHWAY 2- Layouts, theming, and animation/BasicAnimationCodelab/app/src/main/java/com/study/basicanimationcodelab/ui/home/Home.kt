@@ -77,6 +77,7 @@ import com.study.basicanimationcodelab.ui.theme.Green300
 import com.study.basicanimationcodelab.ui.theme.Green800
 import com.study.basicanimationcodelab.ui.theme.Purple100
 import com.study.basicanimationcodelab.ui.theme.Purple700
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -86,7 +87,6 @@ private enum class TabPage {
 
 @Composable
 fun Home() {
-    // todo : tap을 클릭할 때마다 Composition이 발생하는지
     val allTasks = stringArrayResource(id = R.array.tasks)
     val allTopics = stringArrayResource(id = R.array.topics).toList()
 
@@ -112,7 +112,6 @@ fun Home() {
         }
     }
 
-    // todo : LaunchedEffect에 대해서
     LaunchedEffect(Unit) {
         loadWeather()
     }
@@ -122,12 +121,12 @@ fun Home() {
     // todo : 1
     val backgroundColor =  if(tabPage == TabPage.Home) Purple100 else Green300
 
-    // todo : rememberCoroutineScope에 대해서
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             Column {
+                // todo : tap을 클릭할 때마다 Composition이 발생하는지
                 HomeTabBar(
                     backgroundColor = backgroundColor,
                     tabPage = tabPage,

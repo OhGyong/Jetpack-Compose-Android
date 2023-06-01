@@ -27,3 +27,41 @@ key(매개변수)로 전달된 코드 블록으로 코루틴이 실행된다. �
 
 전달된 key 값은 일반 변수, state, property 등이 될 수 있고, 변경을 감지하여 코루틴을 실행한다.
 만약 key 값이 다른 값으로 Recomposition되면 기존 코루틴은 취소되고 새 코루틴으로 실행된다.
+> Activity를 사용할 때 생명 주기를 고려해서 `lifeCycleScope`로 코루틴을 실행했고, Compose를 사용할 때는
+  `LaunchedEffect`를 사용해서 생명 주기를 고려한 코루틴을 실행한다.
+
+<br>
+
+- `rememberCoroutineScope`<br>
+Compose에서 코루틴 스코프를 기억하는 기능을 제공하는 함수이다.
+화면이 재구성 되더라도 코루틴 스코프가 유지되기 때문에 실행중인 코루틴이 취소되지 않는다. 
+코루틴 스코프를 기억하는 것을 이용해서 다른 Composable에서 코루틴 생명 주기를 수동으로 관리해야 할 때
+사용할 수 있다.
+
+```kotlin
+var editMessageShown by remember { mutableStateOf(false) }
+
+suspend fun showEditMessage() {
+  if (!editMessageShown) {
+    editMessageShown = true
+    delay(3000L)
+    editMessageShown = false
+  }
+}
+
+val coroutineScope = rememberCoroutineScope()
+
+Scaffold(
+  floatingActionButton = {
+    HomeFloatingActionButton(
+      // 이벤트 발생 시 코루틴 실행
+      onClick = {
+        coroutineScope.launch {
+          showEditMessage()
+        }
+      }
+    )
+  }
+)
+```
+위 코드로 예를 들면 사용자 이벤트가 발생할 때 코루틴을 실행하며, Composable의 생명 주기에 맞춰 관리할 수 있다.
