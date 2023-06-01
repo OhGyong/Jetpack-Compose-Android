@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -91,10 +92,7 @@ fun Home() {
 
     var tabPage by remember { mutableStateOf(TabPage.Home) }
     var weatherLoading by remember { mutableStateOf(false) }
-
-    // todo : tasks와 topics의 리스트화 하는 방식 알기
-    val tasks = remember { mutableStateListOf(*allTasks) } // 리스트로 받아야 해서
-
+    val tasks = remember { mutableStateListOf(*allTasks) } // 전개 연산자를 통해 개별 인자를 전달 해야함.
     var expandedTopic by remember { mutableStateOf<String?>(null) }
     var editMessageShown by remember { mutableStateOf(false) }
 
@@ -128,13 +126,15 @@ fun Home() {
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
-        modifier = Modifier.height(30.dp),
         topBar = {
-            HomeTabBar(
-                backgroundColor = backgroundColor,
-                tabPage = tabPage,
-                onTabSelected = { tabPage = it }
-            )
+            Column {
+                HomeTabBar(
+                    backgroundColor = backgroundColor,
+                    tabPage = tabPage,
+                    onTabSelected = { tabPage = it }
+                )
+                EditMessage(editMessageShown)
+            }
         },
         containerColor = backgroundColor,
         // todo : floatingActionButton?
@@ -220,7 +220,6 @@ fun Home() {
                 }
             }
         }
-        EditMessage(editMessageShown)
     }
 }
 
