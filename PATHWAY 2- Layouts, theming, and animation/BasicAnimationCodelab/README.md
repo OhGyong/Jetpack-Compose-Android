@@ -100,3 +100,11 @@ TabRow(
   }
 )
 ```
+
+<br>
+
+- `FloatingActionButton`<br>
+FloatingActionButton(FAB)는 일반적으로 앱 화면에서 사용자가 특정 작업을 수행할 수 있는 부동의 액션 버튼이다.
+Scaffold에서 제공하는 floatingActionButton에 FloatingActionButton을 전달하여 설정한다.
+
+<br>

@@ -133,10 +133,8 @@ fun Home() {
             }
         },
         containerColor = backgroundColor,
-        // todo : floatingActionButton?
         floatingActionButton = {
             HomeFloatingActionButton(
-                // todo : isScrollingUp를 override 한 것도 아니고 뭐지
                 extended = lazyListState.isScrollingUp(),
                 onClick = {
                     coroutineScope.launch {
@@ -371,12 +369,10 @@ fun HomeHeader(title: String) {
     )
 }
 
-
 /**
  * LazyListState의 확장 함수로 isScrollingUp을 정의
  */
 @Composable
-// todo : LazyListState?
 private fun LazyListState.isScrollingUp(): Boolean {
     // todo : remember에 this 전달 이유
     // todo : firstVisibleItemIndex
@@ -403,7 +399,6 @@ fun HomeFloatingActionButton(
     extended: Boolean,
     onClick: () -> Unit
 ) {
-    // todo : FloatingActionButton?
     FloatingActionButton(
         onClick = onClick,
         containerColor = MaterialTheme.colorScheme.secondary,
