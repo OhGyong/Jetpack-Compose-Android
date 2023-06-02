@@ -65,3 +65,38 @@ Scaffold(
 )
 ```
 위 코드로 예를 들면 사용자 이벤트가 발생할 때 코루틴을 실행하며, Composable의 생명 주기에 맞춰 관리할 수 있다.
+
+<br>
+
+- `TabRow`<br>
+TabRow는 Material3에서 제공하는 탭 그룹을 표시하기 위한 Composable 함수이다.
+전체 행을 따라 균등한 간격으로 탭을 배치하여 각 탭이 동일한 공간을 차지하도록 한다.
+  - `selectedTabIndex`<br>
+  선택된 탭의 인덱스 값이다.
+  - `indicator`<br>
+  탭의 UI를 커스텀할 수 있는 람다 함수이다.
+  `tabPositions` 라는 값으로 현재 탭의 위치 정보를 알 수 있으며, 해당 위치에 선택된 탭을 표시할 수 있다.
+  
+    <br>
+    두 개의 탭 항목이 있을 때 tabPositions의 값은 다음과 같다.<br>
+    
+    > [TabPosition(left=0.0.dp, right=180.0.dp, width=180.0.dp), TabPosition(left=180.0.dp, right=360.0.dp, width=180.0.dp)]
+
+<br>
+
+- `Enum.ordinal`<br>
+ordinal은 열거형(enum)에서 각 항목의 순서를 나타내는 정수 값이다.
+Enum class로 생성된 열거형 상수에서 첫 번째 상수부터 0부터 시작하여 순차적으로 증가한다.
+```kotlin
+private enum class TabPage {
+    Home, Work
+}
+
+TabRow(
+  selectedTabIndex = tabPage.ordinal,
+  containerColor = backgroundColor,
+  indicator = { tabPositions ->
+    HomeTabIndicator(tabPositions, tabPage)
+  }
+)
+```

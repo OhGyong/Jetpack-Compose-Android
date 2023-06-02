@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -77,7 +76,6 @@ import com.study.basicanimationcodelab.ui.theme.Green300
 import com.study.basicanimationcodelab.ui.theme.Green800
 import com.study.basicanimationcodelab.ui.theme.Purple100
 import com.study.basicanimationcodelab.ui.theme.Purple700
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -126,7 +124,6 @@ fun Home() {
     Scaffold(
         topBar = {
             Column {
-                // todo : tap을 클릭할 때마다 Composition이 발생하는지
                 HomeTabBar(
                     backgroundColor = backgroundColor,
                     tabPage = tabPage,
@@ -385,9 +382,7 @@ private fun LazyListState.isScrollingUp(): Boolean {
     // todo : firstVisibleItemIndex
     // todo : firstVisibleItemScrollOffset?
     var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
-    println("previousIndex  $previousIndex")
     var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset)}
-    println("previousScrollOffset  $previousScrollOffset")
     return remember(this) {
         // todo : derivedStateOf?
         derivedStateOf {
@@ -439,9 +434,7 @@ private fun HomeTabBar(
     tabPage: TabPage,
     onTabSelected: (tabPage: TabPage) -> Unit
 ) {
-    // todo : TabRow에 대해서
     TabRow(
-        // todo : ordinal?
         selectedTabIndex = tabPage.ordinal,
         containerColor = backgroundColor,
         indicator = { tabPositions ->
@@ -468,7 +461,6 @@ private fun HomeTab(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // todo : Modifier에 clickable을 적용
     Row(
         modifier = modifier
             .clickable(onClick = onClick)
@@ -490,22 +482,23 @@ private fun HomeTabIndicator(
     tabPositions: List<TabPosition>,
     tabPage: TabPage
 ) {
-    // todo 4 : 로직 확인
     val indicatorLeft = tabPositions[tabPage.ordinal].left
     val indicatorRight = tabPositions[tabPage.ordinal].right
+    println("$indicatorLeft   $indicatorRight")
     val color = if(tabPage == TabPage.Home) Purple700 else Green800
-    Box {
+    Box(
         Modifier
             .fillMaxSize()
-            .wrapContentSize(align = Alignment.BottomStart)
             .offset(x = indicatorLeft)
+            .wrapContentSize(align = Alignment.BottomStart)
             .width(indicatorRight - indicatorLeft)
+            .fillMaxSize()
             .padding(4.dp)
             .border(
                 BorderStroke(2.dp, color),
                 RoundedCornerShape(4.dp)
             )
-    }
+    )
 }
 
 @Preview
