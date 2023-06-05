@@ -108,3 +108,9 @@ FloatingActionButton(FAB)는 일반적으로 앱 화면에서 사용자가 특�
 Scaffold에서 제공하는 floatingActionButton에 FloatingActionButton을 전달하여 설정한다.
 
 <br>
+
+- `LazyListState`<br>
+  - `LazyListState.firstVisibleItemIndex`<br>
+  현재 화면에 보이는 첫 번째 항목의 인텍스
+  - `LazyListState.firstVisibleItemScrollOffset`<br>
+  현재 화면에 보이는 첫 번째 항목의 오프셋
