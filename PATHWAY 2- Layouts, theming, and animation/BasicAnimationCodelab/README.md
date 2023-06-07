@@ -114,3 +114,33 @@ Scaffold에서 제공하는 floatingActionButton에 FloatingActionButton을 전�
   현재 화면에 보이는 첫 번째 항목의 인텍스
   - `LazyListState.firstVisibleItemScrollOffset`<br>
   현재 화면에 보이는 첫 번째 항목의 오프셋
+
+<br>
+
+- `derivedStateOf` <br>
+주로 다른 state 객체에서 특정 state가 계산되거나 파생되는 경우에 사용되는 함수이다.
+이 함수를 사용하면 계산에서 사용되는 state 중 하나가 변경될 때만 계산이 실행된다.<br>
+계산이 복잡하거나 비용이 많이 드는 연산을 수행하는 경우에 유용하다.
+derivedStateOf는 Compose의 성능을 향상시키고, 불필요한 재계산을 방지하는데 도움을 준다.
+```kotlin
+@Composable
+private fun LazyListState.isScrollingUp(): Boolean {
+    // todo : remember에 this 전달 이유
+    var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset)}
+    return remember(this) {
+        // todo : derivedStateOf?
+        derivedStateOf {
+            if(previousIndex != firstVisibleItemIndex) {
+                previousIndex > firstVisibleItemIndex
+            } else {
+                previousScrollOffset >= firstVisibleItemScrollOffset
+            }.also {
+                previousIndex = firstVisibleItemIndex
+                previousScrollOffset = firstVisibleItemScrollOffset
+            }
+        }
+    }.value
+}
+```
+

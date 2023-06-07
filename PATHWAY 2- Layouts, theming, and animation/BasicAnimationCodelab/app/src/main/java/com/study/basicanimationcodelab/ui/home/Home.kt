@@ -374,11 +374,9 @@ fun HomeHeader(title: String) {
  */
 @Composable
 private fun LazyListState.isScrollingUp(): Boolean {
-    // todo : remember에 this 전달 이유
     var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
     var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset)}
     return remember(this) {
-        // todo : derivedStateOf?
         derivedStateOf {
             if(previousIndex != firstVisibleItemIndex) {
                 previousIndex > firstVisibleItemIndex
