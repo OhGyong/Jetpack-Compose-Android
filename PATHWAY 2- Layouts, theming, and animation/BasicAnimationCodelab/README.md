@@ -119,7 +119,9 @@ Scaffold에서 제공하는 floatingActionButton에 FloatingActionButton을 전�
 
 - `derivedStateOf` <br>
 주로 다른 state 객체에서 특정 state가 계산되거나 파생되는 경우에 사용되는 함수이다.
-이 함수를 사용하면 계산에서 사용되는 state 중 하나가 변경될 때만 계산이 실행된다.<br>
+이 함수를 사용하면 계산에서 사용되는 state 중 하나가 변경될 때만 계산이 실행된다.
+<br>
+<br>
 계산이 복잡하거나 비용이 많이 드는 연산을 수행하는 경우에 유용하다.
 derivedStateOf는 Compose의 성능을 향상시키고, 불필요한 재계산을 방지하는데 도움을 준다.
 ```kotlin
@@ -160,3 +162,25 @@ fun HomeHeader(title: String) {
 ```
 위 코드에서 Modifier.semantics {heading()}은 해당 Text가 heading(제목?) 역할을 한다는 것을 나타낸다.
 > 해당 코드가 없어도 Text 표시에는 문제가 없음.
+
+- `getOrNull, key`<br>
+`getOrNull`은 코틀린 표준 라이브러리에 포함된 함수로 list, array, map 과 같은 컬렉션에서 특정 인텍스 또는 키에 해당하는 요소를 가져온다.
+주어진 인덱스나 키에 해당하는 값이 존재하면 해당 요소를 반환하고 유효하지 않거나 범위를 벗어나느 경우 null을 반환한다.
+<br>
+<br>
+`key`는 Composable 요소의 고유한 키를 지정하는 데 사용된다.
+key를 사용하면 Composition의 변경을 추적하고 업데이트를 최적화한다.
+key 함수에 전달된 매개변수 값에 따라 Compose가 이전 값과 비교하여 변경된 작업에 대해서만 업데이트를 수행한다.
+```kotlin
+items(count = tasks.size) {
+  val task = tasks.getOrNull(it)
+  if(task != null) {
+    key(task) {
+      TaskRow(
+        task = task,
+        onRemove = {tasks.remove(task)}
+      )
+    }
+  }
+}
+```

@@ -200,10 +200,8 @@ fun Home() {
                 }
             }
             items(count = tasks.size) {
-                // todo : getOrNull?
                 val task = tasks.getOrNull(it)
                 if(task != null) {
-                    // todo : key?
                     key(task) {
                         TaskRow(
                             task = task,
