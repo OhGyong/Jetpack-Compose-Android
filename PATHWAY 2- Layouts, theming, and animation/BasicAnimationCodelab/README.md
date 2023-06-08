@@ -142,3 +142,21 @@ private fun LazyListState.isScrollingUp(): Boolean {
 }
 ```
 
+<br>
+
+- `semantics`<br>
+Composition은 UI를 설명하는 Composable로 구성된 트리 구조로 `Semantic Tree`라는 병렬 트리가 존재한다.
+이 트리는 접근성 서비스와 테스트 프레임워크에서 사용자가 이해하기 쉽도록 UI를 설명한다.
+semantics는 Compose에서 접근성을 설정하기 위한 Modifier이다.
+```kotlin
+@Composable
+fun HomeHeader(title: String) {
+    Text(
+        text = title,
+        modifier = Modifier.semantics { heading() },
+        style = MaterialTheme.typography.headlineSmall
+    )
+}
+```
+위 코드에서 Modifier.semantics {heading()}은 해당 Text가 heading(제목?) 역할을 한다는 것을 나타낸다.
+> 해당 코드가 없어도 Text 표시에는 문제가 없음.

@@ -199,7 +199,6 @@ fun Home() {
                     }
                 }
             }
-            // todo : items의 count 사용
             items(count = tasks.size) {
                 // todo : getOrNull?
                 val task = tasks.getOrNull(it)
@@ -363,7 +362,6 @@ fun LoadingRow() {
 fun HomeHeader(title: String) {
     Text(
         text = title,
-        // todo : semantics? heading?
         modifier = Modifier.semantics { heading() },
         style = MaterialTheme.typography.headlineSmall
     )
