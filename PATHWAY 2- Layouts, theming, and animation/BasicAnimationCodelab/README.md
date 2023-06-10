@@ -184,3 +184,12 @@ items(count = tasks.size) {
   }
 }
 ```
+
+- `AnimatedVisibility`<br>
+AnimatedVisibility는 콘텐츠 표시와 사라짐을 애니메이션화 한다.<br>
+각 속성은 [여기](https://developer.android.com/jetpack/compose/animation?hl=ko#animatedvisibility)를 참고.
+```kotlin
+AnimatedVisibility(visible = visible) {
+  Spacer(modifier = Modifier.height(8.dp))
+}
+```

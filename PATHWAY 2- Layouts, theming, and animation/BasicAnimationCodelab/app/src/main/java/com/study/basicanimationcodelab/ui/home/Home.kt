@@ -260,7 +260,6 @@ fun TaskRow(task: String, onRemove: () -> Boolean) {
 
 @Composable
 fun TopicRowSpacer(visible: Boolean) {
-    // todo : AnimatedVisibility?
     AnimatedVisibility(visible = visible) {
         Spacer(modifier = Modifier.height(8.dp))
     }
