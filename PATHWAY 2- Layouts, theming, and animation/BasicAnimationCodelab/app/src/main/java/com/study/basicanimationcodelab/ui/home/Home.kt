@@ -3,10 +3,13 @@
 package com.study.basicanimationcodelab.ui.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.splineBasedDecay
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.horizontalDrag
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,15 +61,21 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.study.basicanimationcodelab.R
@@ -76,6 +85,7 @@ import com.study.basicanimationcodelab.ui.theme.Green300
 import com.study.basicanimationcodelab.ui.theme.Green800
 import com.study.basicanimationcodelab.ui.theme.Purple100
 import com.study.basicanimationcodelab.ui.theme.Purple700
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -233,11 +243,11 @@ fun EditMessage(shown: Boolean) {
 }
 
 @Composable
-fun TaskRow(task: String, onRemove: () -> Boolean) {
+fun TaskRow(task: String, onRemove: () -> Unit) {
     Surface(
         modifier = Modifier
-            .fillMaxWidth(),
-        // todo : swipeToDismiss 확인 필요
+            .fillMaxWidth()
+            .swipeToDismiss(onRemove),
         shadowElevation = 2.dp
     ) {
         Row(
@@ -485,6 +495,50 @@ private fun HomeTabIndicator(
                 RoundedCornerShape(4.dp)
             )
     )
+}
+
+private fun Modifier.swipeToDismiss(
+    onDismissed: () -> Unit
+): Modifier = composed {
+    // TODO 6-1: Create an Animatable instance for the offset of the swiped element.
+    pointerInput(Unit) {
+        // Used to calculate a settling position of a fling animation.
+        val decay = splineBasedDecay<Float>(this)
+        // Wrap in a coroutine scope to use suspend functions for touch events and animation.
+        coroutineScope {
+            while (true) {
+                // Wait for a touch down event.
+                val pointerId = awaitPointerEventScope { awaitFirstDown().id }
+                // TODO 6-2: Touch detected; the animation should be stopped.
+                // Prepare for drag events and record velocity of a fling.
+                val velocityTracker = VelocityTracker()
+                // Wait for drag events.
+                awaitPointerEventScope {
+                    horizontalDrag(pointerId) { change ->
+                        // TODO 6-3: Apply the drag change to the Animatable offset.
+                        // Record the velocity of the drag.
+                        velocityTracker.addPosition(change.uptimeMillis, change.position)
+                        // Consume the gesture event, not passed to external
+                        if (change.positionChange() != Offset.Zero) change.consume()
+                    }
+                }
+                // Dragging finished. Calculate the velocity of the fling.
+                val velocity = velocityTracker.calculateVelocity().x
+                // TODO 6-4: Calculate the eventual position where the fling should settle
+                //           based on the current offset value and velocity
+                // TODO 6-5: Set the upper and lower bounds so that the animation stops when it
+                //           reaches the edge.
+                launch {
+                    // TODO 6-6: Slide back the element if the settling position does not go beyond
+                    //           the size of the element. Remove the element if it does.
+                }
+            }
+        }
+    }
+        .offset {
+            // TODO 6-7: Use the animating offset value here.
+            IntOffset(0, 0)
+        }
 }
 
 @Preview
