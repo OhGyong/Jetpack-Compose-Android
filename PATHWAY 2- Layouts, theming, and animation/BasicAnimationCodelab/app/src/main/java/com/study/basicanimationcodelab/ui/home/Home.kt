@@ -3,6 +3,7 @@
 package com.study.basicanimationcodelab.ui.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.splineBasedDecay
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -126,8 +127,7 @@ fun Home() {
 
     val lazyListState = rememberLazyListState()
 
-    // todo : 1
-    val backgroundColor =  if(tabPage == TabPage.Home) Purple100 else Green300
+    val backgroundColor by animateColorAsState(if (tabPage == TabPage.Home) Purple100 else Green300)
 
     val coroutineScope = rememberCoroutineScope()
 

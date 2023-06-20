@@ -193,3 +193,19 @@ AnimatedVisibility(visible = visible) {
   Spacer(modifier = Modifier.height(8.dp))
 }
 ```
+
+---
+
+## 3. Animating a simple value change
+`animate*AsState`는 Compose에서 가장 간단한 Animation API 중 하나이다.
+이 API는 State가 변경될 때 애니메이션을 적용하고 싶을 때 사용한다.
+
+```kotlin
+// 적용 전
+val backgroundColor = if (tabPage == TabPage.Home) Purple100 else Green300
+
+// 적용 후
+val backgroundColor by animateColorAsState(if (tabPage == TabPage.Home) Purple100 else Green300)
+```
+여기서 tabPage는 State 객체로 지원되는 값으로, 이 값에 따라 색상을 변경한다.
+`animate*AsState` API 중 하나인 `animateColorAsState`을 사용하여 간단하게 애니메이션을 적용할 수 있다.
