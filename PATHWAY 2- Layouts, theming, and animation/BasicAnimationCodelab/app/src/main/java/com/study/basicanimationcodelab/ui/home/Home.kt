@@ -466,7 +466,8 @@ private fun HomeTab(
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = null
+            contentDescription = null,
+            tint = Color.Black
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(text = title)
