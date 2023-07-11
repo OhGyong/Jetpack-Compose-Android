@@ -247,3 +247,12 @@ AnimatedVisibility(
 ## 5. Animating content size change
 `animateContentSize`는 Modifier 함수로, Column이나 Row 등과 같은 컨테이너 요소의 크기가 변경될 때
 애니메이션 효과를 적용한다. animationSpec으로 애니메이션 맞춤설정을 할 수 있다.
+
+```kotlin
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(16.dp)
+      .animateContentSize()
+  )
+```
