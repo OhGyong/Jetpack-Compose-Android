@@ -241,3 +241,9 @@ AnimatedVisibility(
 `animationSpec`은 시간이 지남에 따라 애니메이션 값을 어떻게 변경할지 지정할 수 있다.
 `twin`은 애니메이션의 지속 시간(durationMills)과 타이밍(easing)를 설정하는데 사용된다.
 `FastOutLinearInEasing`은 빠른 시작과 일정한 속도를 가지는 타이밍 함수를 나타낸다.
+
+---
+
+## 5. Animating content size change
+`animateContentSize`는 Modifier 함수로, Column이나 Row 등과 같은 컨테이너 요소의 크기가 변경될 때
+애니메이션 효과를 적용한다. animationSpec으로 애니메이션 맞춤설정을 할 수 있다.
