@@ -4,6 +4,12 @@ package com.study.basicanimationcodelab.ui.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.splineBasedDecay
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -228,6 +234,16 @@ fun Home() {
 fun EditMessage(shown: Boolean) {
     AnimatedVisibility(
         visible = shown,
+        enter = slideInVertically(
+            // Enters by sliding down from offset -fullHeight to 0.
+            initialOffsetY = { fullHeight -> -fullHeight },
+            animationSpec = tween(durationMillis = 150, easing = LinearOutSlowInEasing)
+        ),
+        exit = slideOutVertically(
+            // Exits by sliding up from offset 0 to -fullHeight.
+            targetOffsetY = { fullHeight -> -fullHeight },
+            animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
+        )
     ) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
@@ -414,7 +430,7 @@ fun HomeFloatingActionButton(
                 contentDescription = null
             )
 
-            if(extended) {
+            AnimatedVisibility(visible = extended) {
                 Text(
                     text = stringResource(id = R.string.edit),
                     modifier = Modifier.padding(start = 8.dp, top = 3.dp)
@@ -481,7 +497,6 @@ private fun HomeTabIndicator(
 ) {
     val indicatorLeft = tabPositions[tabPage.ordinal].left
     val indicatorRight = tabPositions[tabPage.ordinal].right
-    println("$indicatorLeft   $indicatorRight")
     val color = if(tabPage == TabPage.Home) Purple700 else Green800
     Box(
         Modifier

@@ -121,7 +121,6 @@ Scaffold에서 제공하는 floatingActionButton에 FloatingActionButton을 전�
 주로 다른 state 객체에서 특정 state가 계산되거나 파생되는 경우에 사용되는 함수이다.
 이 함수를 사용하면 계산에서 사용되는 state 중 하나가 변경될 때만 계산이 실행된다.
 <br>
-<br>
 계산이 복잡하거나 비용이 많이 드는 연산을 수행하는 경우에 유용하다.
 derivedStateOf는 Compose의 성능을 향상시키고, 불필요한 재계산을 방지하는데 도움을 준다.
 ```kotlin
@@ -209,3 +208,36 @@ val backgroundColor by animateColorAsState(if (tabPage == TabPage.Home) Purple10
 ```
 여기서 tabPage는 State 객체로 지원되는 값으로, 이 값에 따라 색상을 변경한다.
 `animate*AsState` API 중 하나인 `animateColorAsState`을 사용하여 간단하게 애니메이션을 적용할 수 있다.
+
+---
+
+## 4. Animating visibility
+
+`AnimatedVisibility`는 지정된 Boolean 값이 변경될 때마다 애니메이션을 실행한다.
+애니메이션은 기본적으로 페이드 인/아웃으로 동작한다.<br>
+```kotlin
+AnimatedVisibility(
+  visible = shown,
+  enter = slideInVertically(
+    // Enters by sliding down from offset -fullHeight to 0.
+    initialOffsetY = { fullHeight -> -fullHeight },
+    animationSpec = tween(durationMillis = 150, easing = LinearOutSlowInEasing)
+  ),
+  exit = slideOutVertically(
+    // Exits by sliding up from offset 0 to -fullHeight.
+    targetOffsetY = { fullHeight -> -fullHeight },
+    animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing)
+  )
+) {
+  // ...
+  }
+}
+```
+`EnterTransition`, `ExitTransition` 등 enter와 exit에 값을 제공하여 애니메이션을 맞춤설정할 수 있다.
+
+`initialOffsetY`은 초기 위치를 반환하는 람다로,
+항목의 전체 높이를 사용하도록 기본 동작을 조정하여 애니메이션이 올바르게 적용되도록 한다.
+
+`animationSpec`은 시간이 지남에 따라 애니메이션 값을 어떻게 변경할지 지정할 수 있다.
+`twin`은 애니메이션의 지속 시간(durationMills)과 타이밍(easing)를 설정하는데 사용된다.
+`FastOutLinearInEasing`은 빠른 시작과 일정한 속도를 가지는 타이밍 함수를 나타낸다.
