@@ -230,7 +230,7 @@ AnimatedVisibility(
   )
 ) {
   // ...
-  }
+}
 }
 ```
 `EnterTransition`, `ExitTransition` 등 enter와 exit에 값을 제공하여 애니메이션을 맞춤설정할 수 있다.
@@ -256,3 +256,52 @@ AnimatedVisibility(
       .animateContentSize()
   )
 ```
+
+---
+
+## 6. Animating multiple values
+`Transition` API는 Transition의 모든 애니메이션이 완료된 시점을 추적할 수 있어 더 복잡한 애니메이션을 만들게 한다.
+위에서 사용했던 개별 `animate*AsState`를 사용하는 경우에는 불가능한 일이다.
+
+Transition은 `updateTransition` 함수를 사용하여 만들 수 있다. 
+Transition을 만들었다면 Transition의 `animate*` 확잠 함수를 사용하여 각 애니메이션 값을 만들 수 있다.<br>
+(확장 함수 예 : `animateDp`, `animateColor`)
+
+```kotlin
+  val transition = updateTransition(tabPage, label = "Tab indicator")
+  val indicatorLeft by transition.animateDp(label = "Indicator left") { page ->
+     tabPositions[page.ordinal].left
+  }
+  val indicatorRight by transition.animateDp(label = "Indicator right") { page ->
+     tabPositions[page.ordinal].right
+  }
+  val color by transition.animateColor(label = "Border color") { page ->
+     if (page == TabPage.Home) Purple700 else Green800
+  }
+```
+
+<br>
+
+또한 animationSpec 처럼 Transition도 `transitionSpec`을 사용하여 애니메이션 맞춤 설정을 할 수 있다.
+```kotlin
+  val indicatorLeft by transition.animateDp(
+      transitionSpec = {
+          if (TabPage.Home isTransitioningTo TabPage.Work) {
+              // Indicator moves to the right.
+              // The left edge moves slower than the right edge.
+              spring(stiffness = Spring.StiffnessVeryLow)
+          } else {
+              // Indicator moves to the left.
+              // The left edge moves faster than the right edge.
+              spring(stiffness = Spring.StiffnessMedium)
+          }
+      },
+      label = "Indicator left"
+  ) { page ->
+      tabPositions[page.ordinal].left
+  }
+```
+`isTransitioningTo`는 현재 상태가 특정 상태로 전환 중인지 여부를 나타내는데 사용된다.
+즉 위 코드에서는 'TabPage.Home'이 'TabPage.Work'로 전환 중인지를 확안한다.
+
+`spring` 함수는 감쇠, 탄성, 강도 등을 조절하는 데 사용된다.
