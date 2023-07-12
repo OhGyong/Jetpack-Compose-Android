@@ -305,3 +305,37 @@ Transition을 만들었다면 Transition의 `animate*` 확잠 함수를 사용�
 즉 위 코드에서는 'TabPage.Home'이 'TabPage.Work'로 전환 중인지를 확안한다.
 
 `spring` 함수는 감쇠, 탄성, 강도 등을 조절하는 데 사용된다.
+
+---
+
+## 7. Repeating animations
+```kotlin
+  val infiniteTransition = rememberInfiniteTransition()
+  val alpha by infiniteTransition.animateFloat(
+    initialValue = 0f,
+    targetValue = 1f,
+    animationSpec = infiniteRepeatable(
+      animation = keyframes {
+        durationMillis = 1000
+        0.7f at 500
+      },
+      repeatMode = RepeatMode.Reverse
+    )
+  )
+```
+반복적으로 애니메이션을 처리하기 위해서 `InfiniteTransition`을 사용할 수 있다.
+`Transition`처럼 여러 값에 애니메이션을 적용할 수 있으면서도 InfiniteTransition은 값에 무기한으로 애니메이션을 적용한다.
+
+InfiniteTransition을 만들려면 `rememberInfiniteTransition` 함수를 사용해야 한다.
+그 뒤 animate* 확장 함수 중 하나를 사용하여 선언하면 된다.
+
+위 코드에서는 초기와 최종 값을 각각 0f와 1f로 세팅하고, `InfiniteRepeatableSpec`을 사용하기 위해 
+`infiniteRepeatable` 함수를 사용한다.
+
+`keyFrames`는 밀리초 단위에서 진행 중인 값을 변경할 수 있는 animationSpec이다.
+위 코드의 겅우 500ms 내에 값이 0에서 0.7까지 빠르게 진행되고 0.7에서 1.0까지 천천히 속도를 줄이며 끝을 향해 진행된다.
+
+기본적으로 repeatMode는 RepeatMode.Restart다.
+이 경우에는 초기 값에서 최종 값으로 전환 된 이후에 다시 초기 값 부터 시작된다.
+RepeatMode.Reverse로 설정하면 최종 값으로 전환 된 이후 최종 값에서 초기값으로 진행된다.
+
