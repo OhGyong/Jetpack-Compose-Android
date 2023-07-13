@@ -193,6 +193,10 @@ AnimatedVisibility(visible = visible) {
 }
 ```
 
+- `splineBasedDecay`<br>
+Compose Animation에서 사용되는 한 종류의 Decay 애니메이션이다.
+Decay 애니메이션은 원래 값에서 시작하여 감쇠되는 속도로 애니메이션을 수행하는 것을 의미한다.
+
 ---
 
 ## 3. Animating a simple value change
@@ -339,3 +343,6 @@ InfiniteTransition을 만들려면 `rememberInfiniteTransition` 함수를 사용
 이 경우에는 초기 값에서 최종 값으로 전환 된 이후에 다시 초기 값 부터 시작된다.
 RepeatMode.Reverse로 설정하면 최종 값으로 전환 된 이후 최종 값에서 초기값으로 진행된다.
 
+---
+
+## 8. Gesture animation

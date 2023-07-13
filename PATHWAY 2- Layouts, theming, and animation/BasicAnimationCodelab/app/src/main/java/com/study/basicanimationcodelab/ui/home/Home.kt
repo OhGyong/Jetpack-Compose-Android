@@ -6,12 +6,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.calculateTargetValue
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -105,6 +107,8 @@ import com.study.basicanimationcodelab.ui.theme.Purple700
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
+import kotlin.math.roundToInt
 
 private enum class TabPage {
     Home, Work
@@ -572,45 +576,78 @@ private fun HomeTabIndicator(
 private fun Modifier.swipeToDismiss(
     onDismissed: () -> Unit
 ): Modifier = composed {
-    // TODO 6-1: Create an Animatable instance for the offset of the swiped element.
+
+    // 애니메이션의 오프셋(가로 값을 측정하기 위해 사용)
+    val offsetX = remember { Animatable(0f) }
+
+    // 사용자의 포인터 입력 이벤트를 수신하고 처리하는 콜백 함수
     pointerInput(Unit) {
-        // Used to calculate a settling position of a fling animation.
+        // Decay 애니메이션 생성(스크롤이나 드래그 애니메이션에 사용됨)
         val decay = splineBasedDecay<Float>(this)
-        // Wrap in a coroutine scope to use suspend functions for touch events and animation.
+
+        // 무한 루프와 awaitPointerEventScope를 위한 coroutineScope 생성
         coroutineScope {
             while (true) {
-                // Wait for a touch down event.
-                val pointerId = awaitPointerEventScope { awaitFirstDown().id }
-                // TODO 6-2: Touch detected; the animation should be stopped.
-                // Prepare for drag events and record velocity of a fling.
+                // 사용자의 움직임 속도를 추적하는 데 사용되는 클래스(여기서는 스와이프에 소모된 속도를 계산하기 위해 쓰임)
                 val velocityTracker = VelocityTracker()
-                // Wait for drag events.
+
+                // 사용자의 입력 이벤트를 비동기적으로 기다렸다가 응답할 수 있는 정지 함수
+                // (UI 요소의 가시성에 따라서도 호출됨)
                 awaitPointerEventScope {
+                    // 첫 번째 입력 이벤트의 PointerEventPass 객체의 id 정보를 저장
+                    val pointerId = awaitFirstDown().id
+
+                    // 사용자의 터치 또는 마우스 드래그 동작에 응답하여 요소의 가로 방향으로 드래그 이동을 감지하고 처리
                     horizontalDrag(pointerId) { change ->
-                        // TODO 6-3: Apply the drag change to the Animatable offset.
-                        // Record the velocity of the drag.
+                        // 기존 offset 값에 사용자의 입력 이벤트에서 이전 위치와 현재 위치의 가로 변화량을 합친 값
+                        val horizontalDragOffset = offsetX.value + change.positionChange().x
+
+                        // 수신 받은 드래그 이벤트의 위치를 애니메이션 값에 동기화
+                        launch {
+                            offsetX.snapTo(horizontalDragOffset)
+                        }
+
+                        // VelocityTracker에 현재 시간과 위치 정보를 전달 받아 현재 위치 정보를 추가
                         velocityTracker.addPosition(change.uptimeMillis, change.position)
-                        // Consume the gesture event, not passed to external
                         if (change.positionChange() != Offset.Zero) change.consume()
                     }
                 }
-                // Dragging finished. Calculate the velocity of the fling.
-                val velocity = velocityTracker.calculateVelocity().x
-                // TODO 6-4: Calculate the eventual position where the fling should settle
-                //           based on the current offset value and velocity
-                // TODO 6-5: Set the upper and lower bounds so that the animation stops when it
-                //           reaches the edge.
+
+                // 현재 실행 중인 애니메이션을 중단
+                offsetX.stop()
+
+                val velocity = velocityTracker.calculateVelocity().x // 사용자의 드래그 속도 계산
+
+                // 요소를 원래 위치로 다시 슬라이드 할지, 슬라이드하여 없애고 콜백을 호출할지
+                // 플링이 정착한 최종 위치를 계산해야 한다.
+                val targetOffsetX = decay.calculateTargetValue(offsetX.value, velocity)
+
+                // 상한값과 하한값을 설정
+                // 경계에 도달하는 즉시 중지되도록 한다.
+                offsetX.updateBounds(
+                    lowerBound = -size.width.toFloat(),
+                    upperBound = size.width.toFloat()
+                )
                 launch {
-                    // TODO 6-6: Slide back the element if the settling position does not go beyond
-                    //           the size of the element. Remove the element if it does.
+                    // 위에서 계산한 플링의 정착 위치와 요소의 크기를 비교
+
+                    // 정착 위치가 요소 크기보다 작으면 플링의 속도가 충분하지 않은 것
+                    if (targetOffsetX.absoluteValue <= size.width) {
+                        // animateTo를 사용하여 값을 다시 0f로 애니메이션 처리하여 요소의 위치 조정
+                        offsetX.animateTo(targetValue = 0f, initialVelocity = velocity)
+                    }
+                    // 정착 위치가 요소 크기보다 크면 플링 애니메이션을 실행
+                    else {
+                        offsetX.animateDecay(velocity, decay)
+                        onDismissed() // 애니메이션이 완료되면 콜백 호출
+                    }
                 }
             }
         }
     }
-        .offset {
-            // TODO 6-7: Use the animating offset value here.
-            IntOffset(0, 0)
-        }
+            // 모든 애니메이션과 동작이 설정되어 있으므로 요소에 오프셋을 적용
+            // 화면의 요소가 동작 또는 애니메이션으로 생성된 값으로 이동
+        .offset { IntOffset(offsetX.value.roundToInt(), 0) }
 }
 
 @Preview
