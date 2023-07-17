@@ -609,6 +609,9 @@ private fun Modifier.swipeToDismiss(
 
                         // VelocityTracker에 현재 시간과 위치 정보를 전달 받아 현재 위치 정보를 추가
                         velocityTracker.addPosition(change.uptimeMillis, change.position)
+
+                        // positionChange()는 사용자의 드래그 이벤트에서 이전 위치와 현재 위치의 변화량.
+                        // 드래그가 감지되면 consume()으로 이벤트 수행.(여러 입력 이벤트의 동작을 막음)
                         if (change.positionChange() != Offset.Zero) change.consume()
                     }
                 }
@@ -616,27 +619,28 @@ private fun Modifier.swipeToDismiss(
                 // 현재 실행 중인 애니메이션을 중단
                 offsetX.stop()
 
-                val velocity = velocityTracker.calculateVelocity().x // 사용자의 드래그 속도 계산
+                // 사용자의 드래그 이벤트가 종료된 뒤의 수평 방향 드래그 속도
+                val velocity = velocityTracker.calculateVelocity().x
 
-                // 요소를 원래 위치로 다시 슬라이드 할지, 슬라이드하여 없애고 콜백을 호출할지
-                // 플링이 정착한 최종 위치를 계산해야 한다.
+                // 현재 가로 위치와 드래그 속도를 기반으로 decay 애니메이션이 정착할 최종 위치
                 val targetOffsetX = decay.calculateTargetValue(offsetX.value, velocity)
 
-                // 상한값과 하한값을 설정
-                // 경계에 도달하는 즉시 중지되도록 한다.
+                // 애니메이션이 특정 범위를 벗어나지 않도록 애니메이션의 최소값과 최대값을 지정
                 offsetX.updateBounds(
                     lowerBound = -size.width.toFloat(),
                     upperBound = size.width.toFloat()
                 )
-                launch {
-                    // 위에서 계산한 플링의 정착 위치와 요소의 크기를 비교
 
-                    // 정착 위치가 요소 크기보다 작으면 플링의 속도가 충분하지 않은 것
+                // 위에서 계산한 플링의 정착 위치와 요소의 크기를 비교
+                launch {
+                    // 애니메이션의 최종 위치가 기기의 가로 크기보다 작으면
+                    // animateTo로 offsetX의 값을 애니메이션으로 변경(초기 상태로 되돌림)
                     if (targetOffsetX.absoluteValue <= size.width) {
                         // animateTo를 사용하여 값을 다시 0f로 애니메이션 처리하여 요소의 위치 조정
+                        // initialVelocity는 초기 애니메이션 속도라는데 값을 변경해도 별 차이를 못느꼈음..
                         offsetX.animateTo(targetValue = 0f, initialVelocity = velocity)
                     }
-                    // 정착 위치가 요소 크기보다 크면 플링 애니메이션을 실행
+                    // 애니메이션의 최종 위치가 기기의 가로 크기보다 크면 애니메이션 감속 애니메이션을 실행 후 아이템 제거
                     else {
                         offsetX.animateDecay(velocity, decay)
                         onDismissed() // 애니메이션이 완료되면 콜백 호출
@@ -645,8 +649,9 @@ private fun Modifier.swipeToDismiss(
             }
         }
     }
-            // 모든 애니메이션과 동작이 설정되어 있으므로 요소에 오프셋을 적용
-            // 화면의 요소가 동작 또는 애니메이션으로 생성된 값으로 이동
+        // IntOffset으로 가로와 세로 위치를 지정 후 offset으로 UI 요소에 위치를 변경하며 적용.
+        // remember로 offsetX의 상태를 저장을 했기 때문에 offsetX의 값이 변경되면
+        // .offset 블록이 호출되어 UI 요소가 업데이트되어 애니메이션 동작을 확인할 수 있게 됨
         .offset { IntOffset(offsetX.value.roundToInt(), 0) }
 }
 
