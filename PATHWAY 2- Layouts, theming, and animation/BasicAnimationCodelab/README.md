@@ -235,7 +235,6 @@ AnimatedVisibility(
 ) {
   // ...
 }
-}
 ```
 `EnterTransition`, `ExitTransition` 등 enter와 exit에 값을 제공하여 애니메이션을 맞춤설정할 수 있다.
 
@@ -392,7 +391,6 @@ private fun Modifier.swipeToDismiss(
           }
           
           // todo 9
-          offsetX.stop()
           val velocity = velocityTracker.calculateVelocity().x
           val targetOffsetX = decay.calculateTargetValue(offsetX.value, velocity)
           offsetX.updateBounds(
@@ -458,7 +456,7 @@ splineBasedDecay을 사용해서 Decay 애니메이션 객체를 만들고 애�
 <br>
 
 #### todo 6
-`awaitPointerEventScope`는 사용자의 입력 이벤트를 비동기적으로 처리할 수 있는 정지 함수로 pointerInput 블록 내에서만 호출되어야 한다.
+`awaitPointerEventScope`는 사용자의 입력 이벤트를 동기적으로 기다렸다가 처리하는 정지 함수로 pointerInput 블록 내에서만 호출되어야 한다.
 
 `awaitPointerEventScope.currentEvent.type`을 로깅해보면 사용자의 입력이 없어도 Move가 찍히고 클릭을 했을 때는 Release 상태만 찍힌다.
 그 이유는 Move의 경우 UI 요소의 위치가 변경되면 해당 요소의 Pointer의 상태가 Move가 되기 때문이다. 
@@ -469,8 +467,22 @@ splineBasedDecay을 사용해서 Decay 애니메이션 객체를 만들고 애�
 
 #### todo 7
 `awaitFirstDown().id`를 통해서 첫 번째 입력 이벤트의 id를 사용하여 Pointer를 구분하게 한다.
+또한 awaitFirstDown()은 첫 번째 Down 이벤트가 감지될 때까지 정지하는 함수이다.
+Down 이벤트가 감지된 이후에 horizontalDrag 함수가 실행된다.
 
 <br>
 
 #### todo 8
-`horizontalDrag`는 
+`horizontalDrag`는 사용자의 터치 또는 드래그 동작에 응답하여 요소의 가로 방향으로 드래그 이동을 감지하고 처리하는 정지 함수이다.
+해당 블록에서 애니메이션의 오프셋 값에 가로 변화량을 더해서 애니메이션 값인 offsetX를 업데이트시킨다.
+업데이트는 `Animatable.snapTo`를 사용하면 된다.
+
+그리고 드래그하면서 변한 오프셋 정보와 걸린 시간을 `VelocityTracker.addPosition`을 통해 VelocityTracker에 위치 정보를 추가한다.
+드래그하면서 얻은 정보는 애니메이션의 최종 위치를 계산하는데 사용된다.
+
+`change.consume()`은 이벤트를 소비(수행)시키는 함수로 해당 이벤트가 다른 곳에서 사용되지 않게 한다.
+이 함수를 통해 드래그하는 동안 스크롤을 막을 수 있다.
+
+<br>
+
+#### todo 9

@@ -590,13 +590,14 @@ private fun Modifier.swipeToDismiss(
                 // 사용자의 움직임 속도를 추적하는 데 사용되는 클래스(여기서는 스와이프에 소모된 속도를 계산하기 위해 쓰임)
                 val velocityTracker = VelocityTracker()
 
-                // 사용자의 입력 이벤트를 비동기적으로 기다렸다가 응답할 수 있는 정지 함수
+                // 사용자의 입력 이벤트를 동기적으로 기다렸다가 응답할 수 있는 정지 함수
                 // (UI 요소의 가시성에 따라서도 호출됨)
                 awaitPointerEventScope {
                     // 첫 번째 입력 이벤트의 Pointer id 저장
                     val pointerId = awaitFirstDown().id
 
-                    // 사용자의 터치 또는 마우스 드래그 동작에 응답하여 요소의 가로 방향으로 드래그 이동을 감지하고 처리
+                    // 사용자의 터치 또는 드래그 동작에 응답하여 요소의 가로 방향으로 드래그 이동을 감지하고 처리
+                    // 드래그가 끝날때 까지 정지
                     horizontalDrag(pointerId) { change ->
                         // 기존 offset 값에 사용자의 입력 이벤트에서 이전 위치와 현재 위치의 가로 변화량을 합친 값
                         val horizontalDragOffset = offsetX.value + change.positionChange().x
@@ -606,7 +607,7 @@ private fun Modifier.swipeToDismiss(
                             offsetX.snapTo(horizontalDragOffset)
                         }
 
-                        // VelocityTracker에 현재 시간과 위치 정보를 전달 받아 현재 위치 정보를 추가
+                        // VelocityTracker에 현재 시간과 위치 정보를 전달 받아 위치 정보를 추가
                         velocityTracker.addPosition(change.uptimeMillis, change.position)
 
                         // positionChange()는 사용자의 드래그 이벤트에서 이전 위치와 현재 위치의 변화량.
@@ -614,17 +615,13 @@ private fun Modifier.swipeToDismiss(
                         if (change.positionChange() != Offset.Zero) change.consume()
                     }
                 }
-
-                // 현재 실행 중인 애니메이션을 중단
-                offsetX.stop()
-
                 // 사용자의 드래그 이벤트가 종료된 뒤의 수평 방향 드래그 속도
                 val velocity = velocityTracker.calculateVelocity().x
 
                 // 현재 가로 위치와 드래그 속도를 기반으로 decay 애니메이션이 정착할 최종 위치
                 val targetOffsetX = decay.calculateTargetValue(offsetX.value, velocity)
 
-                // 애니메이션이 특정 범위를 벗어나지 않도록 애니메이션의 최소값과 최대값을 지정
+                // 애니메이션이 특정 범위를 벗어나지 않도록 애니메이션의 최솟값과 최댓값을 지정
                 offsetX.updateBounds(
                     lowerBound = -size.width.toFloat(),
                     upperBound = size.width.toFloat()
