@@ -458,9 +458,9 @@ splineBasedDecay을 사용해서 Decay 애니메이션 객체를 만들고 애�
 <br>
 
 #### todo 6
-`awaitPointEventScope`는 사용자의 입력 이벤트를 비동기적으로 처리할 수 있는 정지 함수로 pointerInput 블록 내에서만 호출되어야 한다.
+`awaitPointerEventScope`는 사용자의 입력 이벤트를 비동기적으로 처리할 수 있는 정지 함수로 pointerInput 블록 내에서만 호출되어야 한다.
 
-`awaitPointEventScope.currentEvent.type`을 로깅해보면 사용자의 입력이 없어도 Move가 찍히고 클릭을 했을 때는 Release 상태만 찍힌다.
+`awaitPointerEventScope.currentEvent.type`을 로깅해보면 사용자의 입력이 없어도 Move가 찍히고 클릭을 했을 때는 Release 상태만 찍힌다.
 그 이유는 Move의 경우 UI 요소의 위치가 변경되면 해당 요소의 Pointer의 상태가 Move가 되기 때문이다. 
 그리고 Release의 경우 요소를 클릭했을 때 Down, 땠을 때는 Release 상태가 되는데
 비동기적으로 동작하는 awaitPointEventScope는 입력 이벤트가 완료된 시점에 호출되기 때문에 Release 상태만 확인이 가능하다.([PointerEventType 링크](https://developer.android.com/reference/kotlin/androidx/compose/ui/input/pointer/PointerEventType))
@@ -469,3 +469,8 @@ splineBasedDecay을 사용해서 Decay 애니메이션 객체를 만들고 애�
 
 #### todo 7
 `awaitFirstDown().id`를 통해서 첫 번째 입력 이벤트의 id를 사용하여 Pointer를 구분하게 한다.
+
+<br>
+
+#### todo 8
+`horizontalDrag`는 
