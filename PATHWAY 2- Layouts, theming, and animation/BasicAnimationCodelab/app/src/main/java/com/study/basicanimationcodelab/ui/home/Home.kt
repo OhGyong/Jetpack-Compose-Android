@@ -576,7 +576,6 @@ private fun HomeTabIndicator(
 private fun Modifier.swipeToDismiss(
     onDismissed: () -> Unit
 ): Modifier = composed {
-
     // 애니메이션의 오프셋(가로 값을 측정하기 위해 사용)
     val offsetX = remember { Animatable(0f) }
 
@@ -594,7 +593,7 @@ private fun Modifier.swipeToDismiss(
                 // 사용자의 입력 이벤트를 비동기적으로 기다렸다가 응답할 수 있는 정지 함수
                 // (UI 요소의 가시성에 따라서도 호출됨)
                 awaitPointerEventScope {
-                    // 첫 번째 입력 이벤트의 PointerEventPass 객체의 id 정보를 저장
+                    // 첫 번째 입력 이벤트의 Pointer id 저장
                     val pointerId = awaitFirstDown().id
 
                     // 사용자의 터치 또는 마우스 드래그 동작에 응답하여 요소의 가로 방향으로 드래그 이동을 감지하고 처리

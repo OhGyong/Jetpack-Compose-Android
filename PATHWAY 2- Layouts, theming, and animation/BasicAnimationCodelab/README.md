@@ -346,3 +346,126 @@ RepeatMode.Reverse로 설정하면 최종 값으로 전환 된 이후 최종 값
 ---
 
 ## 8. Gesture animation
+리스트에서 스와이프 입력 방식을 통해 아이템을 제거하는데 플링 애니메이션을 적용하는 방법을 알아본다.
+
+우선 터치 요소를 스와이프 할 수 있도록 하는 `Modifier.swipeToDissMiss`를 만든다.
+아이템 요소가 화면의 가장자리로 플링되면 요소가 삭제될 수 있도록 onDismissed 콜백을 호출한다.
+
+사용자가 리스트의 아이템에 손가락을 대면 x,y 좌표가 있는 터치 이벤트가 생성되고, 손가락을 오른쪽이나 왼쪽으로 이동하면 x 좌표도 이동한다.
+선택된 아이템은 사용자의 동작에 따라 이동해야 하므로 터치 이벤트의 위치와 속도에 따라 아이템의 위치가 업데이트된다. 
+
+```kotlin
+private fun Modifier.swipeToDismiss(
+    onDismissed: () -> Unit
+): Modifier = composed {
+    // todo 1
+    val offsetX = remember { Animatable(0f) }
+  
+    // todo 2
+    pointerInput(Unit) {
+      
+      // todo 3
+      val decay = splineBasedDecay<Float>(this)
+      
+      // todo 4
+      coroutineScope {
+        while (true) {
+            
+          // todo 5 
+          val velocityTracker = VelocityTracker()
+          
+          // todo 6
+          awaitPointerEventScope {
+            
+            // todo 7
+            val pointerId = awaitFirstDown().id
+            
+            // todo 8
+            horizontalDrag(pointerId) { change ->
+              val horizontalDragOffset = offsetX.value + change.positionChange().x
+              launch {
+                offsetX.snapTo(horizontalDragOffset)
+              }
+              velocityTracker.addPosition(change.uptimeMillis, change.position)
+              if (change.positionChange() != Offset.Zero) change.consume()
+            }
+          }
+          
+          // todo 9
+          offsetX.stop()
+          val velocity = velocityTracker.calculateVelocity().x
+          val targetOffsetX = decay.calculateTargetValue(offsetX.value, velocity)
+          offsetX.updateBounds(
+            lowerBound = -size.width.toFloat(),
+            upperBound = size.width.toFloat()
+          )
+          
+          // todo 10
+          launch {
+            if (targetOffsetX.absoluteValue <= size.width) {
+              offsetX.animateTo(targetValue = 0f, initialVelocity = velocity)
+            }
+            else {
+              offsetX.animateDecay(velocity, decay)
+              onDismissed()
+            }
+          }
+        }
+      }
+    }
+        // todo 2
+        .offset { IntOffset(offsetX.value.roundToInt(), 0) }
+}
+```
+
+#### todo 1
+사용자의 입력 이벤트에 따라 애니메이션의 offset 값을 업데이트하기 위해 Animatable 객체를 remember로 저장한다.
+
+<br>
+
+#### todo 2
+`pointerInput()`은 사용자의 포인터 입력 이벤트를 수신하고 처리하는 콜백 함수이다.
+해당 콜백에서 사용자의 입력에 따른 좌표 값과 애니메이션의 오프셋 값을 계산한다.
+
+콜백에서 구한 애니메이션의 좌표 값은 `offset`을 사용하여 요소의 위치를 배치한다.
+요소의 위치를 배치하는 방법은 offset 함수의 파라미터인 `IntOffset`으로 가로와 세로 위치를 지정한다.
+
+offset이 콜백 함수가 아니여도 IntOffset에 사용되는 offsetX 값은 remember로 상태로 저장됐기 때문에
+offsetX의 값이 변경되면 offset 함수가 호출되면서  UI 요소가 업데이트되어 애니메이션 동작을 확인할 수 있게 된다.
+
+<br>
+
+#### todo 3
+`splineBasedDecay`는 Compose 애니메이션에서 사용되는 한 종류인 Decay 애니메이션이다.
+Decay 애니메이션은 원래 값에서 시작하여 감쇠되는 속도로 애니메이션을 수행하는 것을 의미하는데,
+이런 동작성으로 주로 스크롤 또는 드래그와 관련된 애니메이션에 사용된다.
+
+splineBasedDecay을 사용해서 Decay 애니메이션 객체를 만들고 애니메이션 오프셋 값을 구해서 사용할 것이다.
+
+<br>
+
+#### todo 4
+터치 이벤트의 좌표 및 속도와 애니메이션의 오프셋은 코루틴을 실행하여 비동기로 계산하고,
+이 값을 계속 계산할 수 있도록 무한 루프를 생성한다.
+
+<br>
+
+#### todo 5
+`VelocityTracker`는 사용자의 터치 이벤트를 추적하여 속도를 계산하는 데 사용된다.
+사용자의 입력 이벤트가 발생했을 때 시간과 위치 정보를 전달하면 이를 바탕으로 속도를 계산한다.
+여기서는 스와이프에 소모된 속도를 계산하기 위해서 사용된다.
+
+<br>
+
+#### todo 6
+`awaitPointEventScope`는 사용자의 입력 이벤트를 비동기적으로 처리할 수 있는 정지 함수로 pointerInput 블록 내에서만 호출되어야 한다.
+
+`awaitPointEventScope.currentEvent.type`을 로깅해보면 사용자의 입력이 없어도 Move가 찍히고 클릭을 했을 때는 Release 상태만 찍힌다.
+그 이유는 Move의 경우 UI 요소의 위치가 변경되면 해당 요소의 Pointer의 상태가 Move가 되기 때문이다. 
+그리고 Release의 경우 요소를 클릭했을 때 Down, 땠을 때는 Release 상태가 되는데
+비동기적으로 동작하는 awaitPointEventScope는 입력 이벤트가 완료된 시점에 호출되기 때문에 Release 상태만 확인이 가능하다.([PointerEventType 링크](https://developer.android.com/reference/kotlin/androidx/compose/ui/input/pointer/PointerEventType))
+
+<br>
+
+#### todo 7
+`awaitFirstDown().id`를 통해서 첫 번째 입력 이벤트의 id를 사용하여 Pointer를 구분하게 한다.
