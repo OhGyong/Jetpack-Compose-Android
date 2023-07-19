@@ -136,7 +136,7 @@ fun Home() {
     suspend fun showEditMessage() {
         if (!editMessageShown) {
             editMessageShown = true
-            delay(3000L)
+            delay(1000L)
             editMessageShown = false
         }
     }

@@ -502,3 +502,8 @@ Down 이벤트가 감지된 이후에 horizontalDrag 함수가 실행된다.
 
 반대로 최중 위치가 해당 요소의 너비보다 큰 경우 드래그를 강하게 했거나 끝까지 측면으로 끝까지 한 것이므로 요소를 삭제한다.
 추가적으로 요소를 삭제하기 전에 `Animatable.animateDecay`를 사용해서 Decay 애니메이션을 보여주고 요소를 삭제했다.
+
+---
+
+![ComposeAni1](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/68dffc82-3f51-4555-837b-283013cdeda8)
+![ComposeAni2](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/0214a0c6-bf83-4a0f-aa9e-7ca70b962220)
