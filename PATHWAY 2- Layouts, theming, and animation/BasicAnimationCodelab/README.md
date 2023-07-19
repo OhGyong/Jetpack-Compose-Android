@@ -4,9 +4,10 @@
 ---
 
 - `SnapshotStateList`<br>
-일반적인 `mutableStateListOf` 함수는 `MutableList`를 반환하지만, Compose 라이브러리의 mutableStateListOf는
-`SnapshotStateList`를 반환한다. SnapshotStateList는 Compose의 state 관리에 특화된 리스트 구현체로 Compose가
-해당 값을 추적하고, 변경 사항을 감지하여 UI를 업데이트하는 데 사용된다.
+mutableStateListOf 함수를 사용하면 단순히 MutableList를 사용한다고 생각하지만, 사실 `SnapshotStateList`를 반환한다.
+SnapshotStateList는 Compose 라이브러리에서 제공하는 State 관리에 특화된 리스트 구현체이며,
+Compose가 해당 값을 추적하고 변경 사항을 감지하여 UI를 업데이트하는 데 사용된다.
+그리고 SnapshotStateList가 MutableList를 상속받고 있어서 MutableList를 사용하듯이 하면 된다.
 
 <br>
 
