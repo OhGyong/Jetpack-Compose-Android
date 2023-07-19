@@ -43,7 +43,7 @@
 - InfiniteTransition을 통한 애니메이션 반복
 - 사용자 제스처에 대해 애니메이션 적용(드래그 이벤트가 입력됐을 때)
 
-![ComposeAni2](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/0214a0c6-bf83-4a0f-aa9e-7ca70b962220)
+![ComposeAni1](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/68dffc82-3f51-4555-837b-283013cdeda8)
 ![ComposeAni2](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/0214a0c6-bf83-4a0f-aa9e-7ca70b962220)
 
 ## 9. Custom layouts and graphics
