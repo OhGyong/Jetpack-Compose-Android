@@ -34,6 +34,17 @@
 ## 7. Introduction to drawing in Compose
 
 ## 8. Animating elements
+[BasicAnimationCodelab](https://github.com/OhGyong/Jetpack-Compose-Android/tree/main/PATHWAY%202-%20Layouts%2C%20theming%2C%20and%20animation/BasicAnimationCodelab)
+- LaunchedEffect, rememberCoroutineScope, derivedStateOf, semantics, LazyListState.firstVisibleItemIndex / firstVisibleItemScrollOffset
+- FloatingActionButton, TabRow
+- Animation에 사용되는 Api를 사용해서 간단한 애니메이션 적
+- AnimationSpec을 통한 애니메이션 맞춤 설정
+- Transition을 사용한 복잡한 애니메이션 적용
+- InfiniteTransition을 통한 애니메이션 반복
+- 사용자 제스처에 대해 애니메이션 적용(드래그 이벤트가 입력됐을 때)
+
+![ComposeAni2](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/0214a0c6-bf83-4a0f-aa9e-7ca70b962220)
+![ComposeAni2](https://github.com/OhGyong/Jetpack-Compose-Android/assets/52282493/0214a0c6-bf83-4a0f-aa9e-7ca70b962220)
 
 ## 9. Custom layouts and graphics
 
