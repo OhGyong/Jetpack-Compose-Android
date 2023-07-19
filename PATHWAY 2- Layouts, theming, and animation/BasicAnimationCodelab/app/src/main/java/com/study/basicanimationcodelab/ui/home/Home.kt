@@ -606,7 +606,7 @@ private fun Modifier.swipeToDismiss(
                         launch {
                             offsetX.snapTo(horizontalDragOffset)
                         }
-
+                        println("horizontalDragOffset   " + horizontalDragOffset)
                         // VelocityTracker에 현재 시간과 위치 정보를 전달 받아 위치 정보를 추가
                         velocityTracker.addPosition(change.uptimeMillis, change.position)
 
@@ -618,25 +618,24 @@ private fun Modifier.swipeToDismiss(
                 // 사용자의 드래그 이벤트가 종료된 뒤의 수평 방향 드래그 속도
                 val velocity = velocityTracker.calculateVelocity().x
 
-                // 현재 가로 위치와 드래그 속도를 기반으로 decay 애니메이션이 정착할 최종 위치
+                // 현재 가로 위치와 드래그 속도를 기반으로 애니메이션이 정착할 최종 위치
                 val targetOffsetX = decay.calculateTargetValue(offsetX.value, velocity)
 
-                // 애니메이션이 특정 범위를 벗어나지 않도록 애니메이션의 최솟값과 최댓값을 지정
+                // 드래그 동작 범위를 해당 요소의 가장 왼쪽에서 가장 오른쪽 끝까지로 제한
                 offsetX.updateBounds(
                     lowerBound = -size.width.toFloat(),
                     upperBound = size.width.toFloat()
                 )
 
-                // 위에서 계산한 플링의 정착 위치와 요소의 크기를 비교
                 launch {
-                    // 애니메이션의 최종 위치가 기기의 가로 크기보다 작으면
+                    // 애니메이션의 최종 위치가 해당 요소의 너비보다 작으면
                     // animateTo로 offsetX의 값을 애니메이션으로 변경(초기 상태로 되돌림)
                     if (targetOffsetX.absoluteValue <= size.width) {
                         // animateTo를 사용하여 값을 다시 0f로 애니메이션 처리하여 요소의 위치 조정
                         // initialVelocity는 초기 애니메이션 속도라는데 값을 변경해도 별 차이를 못느꼈음..
                         offsetX.animateTo(targetValue = 0f, initialVelocity = velocity)
                     }
-                    // 애니메이션의 최종 위치가 기기의 가로 크기보다 크면 애니메이션 감속 애니메이션을 실행 후 아이템 제거
+                    // 애니메이션의 최종 위치가 해당 요소의 너비보다 크면 애니메이션 감속 애니메이션을 실행 후 아이템 제거
                     else {
                         offsetX.animateDecay(velocity, decay)
                         onDismissed() // 애니메이션이 완료되면 콜백 호출

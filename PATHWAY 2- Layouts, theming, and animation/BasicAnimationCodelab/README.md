@@ -351,7 +351,9 @@ RepeatMode.Reverse로 설정하면 최종 값으로 전환 된 이후 최종 값
 아이템 요소가 화면의 가장자리로 플링되면 요소가 삭제될 수 있도록 onDismissed 콜백을 호출한다.
 
 사용자가 리스트의 아이템에 손가락을 대면 x,y 좌표가 있는 터치 이벤트가 생성되고, 손가락을 오른쪽이나 왼쪽으로 이동하면 x 좌표도 이동한다.
-선택된 아이템은 사용자의 동작에 따라 이동해야 하므로 터치 이벤트의 위치와 속도에 따라 아이템의 위치가 업데이트된다. 
+선택된 아이템은 사용자의 동작에 따라 이동해야 하므로 터치 이벤트의 위치와 속도에 따라 아이템의 위치가 업데이트된다.
+
+드래그가 끝나면 애니메이션을 실행한다.
 
 ```kotlin
 private fun Modifier.swipeToDismiss(
@@ -393,12 +395,13 @@ private fun Modifier.swipeToDismiss(
           // todo 9
           val velocity = velocityTracker.calculateVelocity().x
           val targetOffsetX = decay.calculateTargetValue(offsetX.value, velocity)
+          
+          // todo 10
           offsetX.updateBounds(
             lowerBound = -size.width.toFloat(),
             upperBound = size.width.toFloat()
           )
           
-          // todo 10
           launch {
             if (targetOffsetX.absoluteValue <= size.width) {
               offsetX.animateTo(targetValue = 0f, initialVelocity = velocity)
@@ -486,3 +489,16 @@ Down 이벤트가 감지된 이후에 horizontalDrag 함수가 실행된다.
 <br>
 
 #### todo 9
+드래그 이벤트가 끝난 뒤에는 이전에 구한 애니메이션의 위칫값과 VelocityTracker의 속도는 애니메이션이 실행되기 위한
+최초 위치와 최초 속도로써 `decay.calculateTargetValue`에 전달하여 애니메이션이 도달한 최종 위치를 설정한다.
+
+<br>
+
+#### todo 10
+`Animatable.updateBounds`를 사용해서 드래그의 동작 범위를 해당 요소의 너비 시작과 끝으로 제한한다.
+
+애니메이션의 최종 위치가 해당 요소의 너비보다 작은 경우 드래그를 약하게 한 것이기 때문에 `Animatable.animateTo`를 사용하여
+요소의 위치를 초기화 시킨다.
+
+반대로 최중 위치가 해당 요소의 너비보다 큰 경우 드래그를 강하게 했거나 끝까지 측면으로 끝까지 한 것이므로 요소를 삭제한다.
+추가적으로 요소를 삭제하기 전에 `Animatable.animateDecay`를 사용해서 Decay 애니메이션을 보여주고 요소를 삭제했다.
