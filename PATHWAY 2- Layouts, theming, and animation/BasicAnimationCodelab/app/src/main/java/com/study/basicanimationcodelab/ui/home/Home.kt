@@ -606,7 +606,7 @@ private fun Modifier.swipeToDismiss(
                         launch {
                             offsetX.snapTo(horizontalDragOffset)
                         }
-                        println("horizontalDragOffset   " + horizontalDragOffset)
+
                         // VelocityTracker에 현재 시간과 위치 정보를 전달 받아 위치 정보를 추가
                         velocityTracker.addPosition(change.uptimeMillis, change.position)
 
