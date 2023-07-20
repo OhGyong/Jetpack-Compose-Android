@@ -124,6 +124,7 @@ Scaffold에서 제공하는 floatingActionButton에 FloatingActionButton을 전�
 <br>
 계산이 복잡하거나 비용이 많이 드는 연산을 수행하는 경우에 유용하다.
 derivedStateOf는 Compose의 성능을 향상시키고, 불필요한 재계산을 방지하는데 도움을 준다.
+
 ```kotlin
 @Composable
 private fun LazyListState.isScrollingUp(): Boolean {
